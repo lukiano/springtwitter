@@ -15,5 +15,9 @@
 	<beans profile="mssqlserver">
 		<util:properties id="datasourceConfiguration" location="classpath:mssqlserver.properties"/>
 	</beans>    
+
+	<beans profile="h2">
+		<util:properties id="datasourceConfiguration" location="classpath:h2.properties"/>
+	</beans>    
 	    
 </beans>

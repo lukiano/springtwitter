@@ -60,6 +60,10 @@
 		<util:properties id="jdbcConfiguration" location="classpath:postgresqljdbc.properties"/>
 	</beans>
 
+	<beans profile="h2">
+		<util:properties id="jdbcConfiguration" location="classpath:h2jdbc.properties"/>
+	</beans>
+	
 	<beans profile="mssqlserver">
 		<util:properties id="jdbcConfiguration" location="classpath:mssqlserverjdbc.properties"/>
 	</beans>    
