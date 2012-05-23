@@ -24,9 +24,10 @@ function initAtmosphere() {
 	request.fallbackTransport = 'long-polling';
 	request.onMessage = webSocketsCallback;
 	request.onReconnect = function (request, response) {
-		socket.info("Reconnecting")
+		socket.info("Reconnecting");
 	};
-	var subSocket = socket.subscribe(request);
+	//var subSocket = socket.subscribe(request);
+	socket.subscribe(request);
 }
 
 function ready() {

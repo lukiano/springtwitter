@@ -75,7 +75,7 @@ function getTweetCallback(data, postFunction) {
         for (i = 0; i < data.length; i++) {
             tweet = data[i];
         	if (i == 0) {
-        		lastTimesamp = tweet.creationDate;
+        		lastTimestamp = tweet.creationDate;
         	}
             tweetLine.append(buildHtml(tweet));
         }

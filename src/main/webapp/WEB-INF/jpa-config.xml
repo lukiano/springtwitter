@@ -36,6 +36,8 @@
         <property name="jpaPropertyMap">
             <map>
                 <entry key="javax.persistence.validation.factory" value-ref="validator" />
+                <entry key="hibernate.dialect" value="#{datasourceConfiguration.getProperty('hibernate.dialect')}" />
+                <entry key="hibernate.jdbc.lob.non_contextual_creation" value="#{datasourceConfiguration.getProperty('hibernate.jdbc.lob.non_contextual_creation')}" />
             </map>
 
         </property>

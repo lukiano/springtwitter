@@ -1,1 +1,1 @@
-mvn jetty:run-forked -P atomikos,master
+mvn jetty:run-forked -P atomikos,master,mssqlserver

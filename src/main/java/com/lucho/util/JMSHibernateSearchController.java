@@ -1,5 +1,6 @@
 package com.lucho.util;
 
+//CHECKSTYLE:OFF
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

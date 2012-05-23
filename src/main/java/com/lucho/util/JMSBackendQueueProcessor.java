@@ -1,5 +1,6 @@
 package com.lucho.util;
 
+//CHECKSTYLE:OFF
 import org.hibernate.search.Environment;
 import org.hibernate.search.SearchException;
 import org.hibernate.search.backend.IndexingMonitor;

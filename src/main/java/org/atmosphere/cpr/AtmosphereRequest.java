@@ -1,3 +1,4 @@
+//CHECKSTYLE:OFF
 package org.atmosphere.cpr;
 
 import static org.atmosphere.cpr.HeaderConfig.X_ATMOSPHERE;
@@ -197,9 +198,9 @@ public class AtmosphereRequest extends HttpServletRequestWrapper {
      * {@inheritDoc}
      */
     @Override
-    public Enumeration getHeaders(String name) {
+    public Enumeration<String> getHeaders(String name) {
 
-        ArrayList list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<String>();
         // Never override the parent Request
         if (!name.equalsIgnoreCase("content-type")) {
             list = Collections.list(b.request.getHeaders(name));
@@ -218,7 +219,7 @@ public class AtmosphereRequest extends HttpServletRequestWrapper {
             if (isNotNoOps()) {
                 if (list.size() == 0 && name.startsWith(X_ATMOSPHERE)) {
                     if (b.request.getAttribute(name) != null) {
-                        list.add(b.request.getAttribute(name));
+                        list.add(b.request.getAttribute(name).toString());
                     }
                 }
             }
@@ -239,13 +240,13 @@ public class AtmosphereRequest extends HttpServletRequestWrapper {
      */
     @Override
     public Enumeration<String> getHeaderNames() {
-        ArrayList list = Collections.list(b.request.getHeaderNames());
+        ArrayList<String> list = Collections.list(b.request.getHeaderNames());
         if (b.contentType != null) {
             list.add("Content-Type");
         }
 
         if (b.request != null) {
-            Enumeration e = b.request.getAttributeNames();
+            Enumeration<String> e = b.request.getAttributeNames();
             while (e.hasMoreElements()) {
                 String name = e.nextElement().toString();
                 if (name.startsWith(X_ATMOSPHERE)) {
@@ -425,6 +426,7 @@ public class AtmosphereRequest extends HttpServletRequestWrapper {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public String getRealPath(String path) {
         return b.request.getRealPath(path);
     }
@@ -616,6 +618,7 @@ public class AtmosphereRequest extends HttpServletRequestWrapper {
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
     public boolean isRequestedSessionIdFromUrl() {
         return b.request.isRequestedSessionIdFromUrl();
     }
@@ -819,7 +822,7 @@ public class AtmosphereRequest extends HttpServletRequestWrapper {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        Set<String> l = new HashSet();
+        Set<String> l = new HashSet<String>();
         l.addAll(b.localAttributes.keySet());
         Enumeration<String> e = (isNotNoOps() ? b.request.getAttributeNames() : null);
         if (e != null) {

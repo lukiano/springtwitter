@@ -1,3 +1,4 @@
+//CHECKSTYLE:OFF
 /*
  * Copyright 2012 Jeanfrancois Arcand
  *
@@ -162,10 +163,10 @@ public final class ReflectorServletProcessor extends
         }
         for (FilterAndName filter : filters) {
             FilterConfigImpl fc = new FilterConfigImpl(sc);
-            fc.setFilter(filter.f);
-            fc.setFilterName(filter.name);
+            fc.setFilter(filter.getFilter());
+            fc.setFilterName(filter.getName());
             filterChain.addFilter(fc);
-            logger.info("Installing Filter {}", filter.name);
+            logger.info("Installing Filter {}", filter.getName());
         }
     }
 
@@ -253,11 +254,12 @@ public final class ReflectorServletProcessor extends
      * what we are really doing is addFilterClass.
      * <p/>
      * TODO: MUST ALLOW MORE THAN ONE FILTER.
-     * @param filterClass
+     * @param filterClass name of the class that represents a filter.
      */
     public void setFilterClassName(final String filterClass) {
-        if (filterClass == null)
+        if (filterClass == null) {
             return;
+        }
         filtersClass.add(filterClass);
     }
 
@@ -278,6 +280,11 @@ public final class ReflectorServletProcessor extends
      */
     private class FilterChainServletWrapper extends HttpServlet {
 
+        /**
+         * Serial version UID.
+         */
+        private static final long serialVersionUID = -1525180672410604016L;
+
         @Override
         public void destroy() {
             filterChain.destroy();
@@ -289,7 +296,7 @@ public final class ReflectorServletProcessor extends
         }
 
         @Override
-        public Enumeration getInitParameterNames() {
+        public Enumeration<String> getInitParameterNames() {
             return getServletConfig().getInitParameterNames();
         }
 

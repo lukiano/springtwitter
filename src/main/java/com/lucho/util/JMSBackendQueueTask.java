@@ -1,5 +1,6 @@
 package com.lucho.util;
 
+//CHECKSTYLE:OFF
 import org.hibernate.search.SearchException;
 import org.hibernate.search.backend.LuceneWork;
 import org.hibernate.search.backend.OptimizeLuceneWork;
@@ -49,8 +50,9 @@ public class JMSBackendQueueTask implements Runnable {
                 filteredQueue.remove(work);
             }
         }
-        if (filteredQueue.size() == 0)
+        if (filteredQueue.size() == 0) {
             return;
+        }
         LuceneWorkSerializer serializer = indexManager.getSerializer();
         byte[] data = serializer.toSerializedModel(filteredQueue);
         processor.prepareJMSTools();
@@ -73,8 +75,9 @@ public class JMSBackendQueueTask implements Runnable {
                             + processor.getJmsQueueName(), e);
         } finally {
             try {
-                if (cnn != null)
+                if (cnn != null) {
                     cnn.close();
+                }
             } catch (JMSException e) {
                 log.unableToCloseJmsConnection(processor.getJmsQueueName(), e);
             }

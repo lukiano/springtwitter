@@ -8,7 +8,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.atmosphere.cpr.AtmosphereResource;
-import org.atmosphere.cpr.Meteor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;

@@ -10,7 +10,8 @@ import org.hibernate.search.query.DatabaseRetrievalMethod;
 import org.hibernate.search.query.ObjectLookupMethod;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.joda.time.DateTime;
-import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
+import org.springframework.data.jpa.repository.support.
+QueryDslRepositorySupport;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lucho.domain.QTweet;
@@ -89,6 +90,7 @@ public class TweetRepositoryImpl extends QueryDslRepositorySupport implements
                 ObjectLookupMethod.SECOND_LEVEL_CACHE,
                 DatabaseRetrievalMethod.QUERY);
         query.setMaxResults(MAX_RESULTS);
+        @SuppressWarnings("unchecked")
         List<Tweet> tweetList = query.getResultList();
         for (Tweet tweet : tweetList) {
             boolean followed = tweet.getOwner().getFollowedBy().contains(user);

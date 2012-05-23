@@ -1,5 +1,6 @@
 package com.lucho.util;
 
+//CHECKSTYLE:OFF
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.utils.Service;
 

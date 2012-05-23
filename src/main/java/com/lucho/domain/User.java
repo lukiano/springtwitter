@@ -38,7 +38,7 @@ import com.lucho.service.UserService;
 @Entity
 @Cacheable
 @Table(name = "t_user",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})}
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) }
 )
 @Configurable(preConstruction = true)
 public class User implements UserDetails {
@@ -123,7 +123,8 @@ public class User implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     /**
-     * 
+     * Temporal field, true if this user is not being
+     * followed by the tweetline requester.
      */
     @Transient
     @JsonProperty
@@ -172,11 +173,6 @@ public class User implements UserDetails {
         return password;
     }
 
-    public final void setPassword(final String aPass) {
-    	this.password = aPass;
-    }
-
-
     @Override
     @JsonIgnore
     public final boolean isAccountNonExpired() {
@@ -218,20 +214,34 @@ public class User implements UserDetails {
         this.authorities = theAuthorities;
     }
 
+    /**
+     * Temporal field, true if this user is not being
+     * followed by the tweetline requester.
+     * @param canIFollow true if this user is not being
+     * followed by the tweetline requester.
+     */
     public final void setCanFollow(final boolean canIFollow) {
         this.canFollow = canIFollow;
+    }
+
+    /**
+     * @return true if this user is not being
+     * followed by the tweetline requester.
+     */
+    public final boolean isCanFollow() {
+        return this.canFollow;
     }
 
     @Override
     public final boolean equals(final Object another) {
         return (another == this)
                 || another instanceof User
-                && this.id.equals(((User) another).id);
+                && this.username.equals(((User) another).username);
     }
 
     @Override
     public final int hashCode() {
-        return this.id;
+        return this.username.hashCode();
     }
 
     /**
@@ -254,9 +264,8 @@ public class User implements UserDetails {
     }
 
     /**
-     * 
-     * @param millis
-     * @return
+     * @param millis List will only contain tweets newer than this date.
+     * @return a list of tweets: tweetline for the user.
      */
     @JsonIgnore
     public final List<Tweet> getTweetsIncludingFollows(final Long millis) {

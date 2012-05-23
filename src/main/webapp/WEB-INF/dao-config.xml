@@ -10,11 +10,9 @@
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
-    <util:properties id="jdbcConfiguration" location="classpath:jdbcdatasource.properties"/>
-
     <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-        <property name="driverClass" value="${datasource.driver}" />
-        <property name="jdbcUrl" value="${datasource.url}"/>
+        <property name="driverClass" value="#{datasourceConfiguration.getProperty('datasource.driver')}" />
+        <property name="jdbcUrl" value="#{datasourceConfiguration.getProperty('datasource.url')}"/>
         <property name="username" value="#{jdbcConfiguration.getProperty('user')}"/>
         <property name="password" value="#{jdbcConfiguration.getProperty('password')}"/>
         <property name="maxConnectionsPerPartition" value="30"/>
@@ -33,7 +31,7 @@
     
     <beans profile="bitronix">
         <bean id="xaDataSource" class="bitronix.tm.resource.jdbc.PoolingDataSource" init-method="init" destroy-method="close" depends-on="transactionManager">
-            <property name="className" value="${datasource.classname}" />
+            <property name="className" value="#{datasourceConfiguration.getProperty('datasource.classname')}" />
             <property name="uniqueName" value="XADBMS" />
             <property name="maxPoolSize" value="50"/>
             <property name="minPoolSize" value="5"/>
@@ -51,11 +49,19 @@
             <property name="uniqueResourceName" value="XADBMS" />
             <property name="maxPoolSize" value="50"/>
             <property name="minPoolSize" value="5"/>
-            <property name="xaDataSourceClassName" value="${datasource.classname}"/>
+            <property name="xaDataSourceClassName" value="#{datasourceConfiguration.getProperty('datasource.classname')}"/>
             <property name="xaProperties" ref="jdbcConfiguration" />
             <property name="poolSize" value="3"/>
             <property name="testQuery" value="SELECT 1" />
         </bean>
     </beans>
-    
+
+	<beans profile="postgresql">
+		<util:properties id="jdbcConfiguration" location="classpath:postgresqljdbc.properties"/>
+	</beans>
+
+	<beans profile="mssqlserver">
+		<util:properties id="jdbcConfiguration" location="classpath:mssqlserverjdbc.properties"/>
+	</beans>    
+	    
 </beans>

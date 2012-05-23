@@ -27,9 +27,10 @@ public interface UserService {
     boolean shouldRefresh(User user);
 
     /**
-     * 
-     * @param user
-     * @param resource
+     * Register a websocket connection that will return new tweets for
+     * the user's followers.
+     * @param user owner of the websocket connection.
+     * @param resource a websocket connection.
      */
     void registerWebsocket(User user, AtmosphereResource resource);
 }

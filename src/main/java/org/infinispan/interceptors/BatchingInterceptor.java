@@ -1,3 +1,4 @@
+//CHECKSTYLE:OFF
 package org.infinispan.interceptors;
 
 import javax.transaction.Status;

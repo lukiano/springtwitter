@@ -2,7 +2,8 @@ package com.lucho.repository;
 
 import java.util.Set;
 
-import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
+import org.springframework.data.jpa.repository.support.
+QueryDslRepositorySupport;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lucho.domain.QUser;

@@ -20,7 +20,7 @@
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
-
+	<import resource="properties-config.xml"/>
     <import resource="cache-config.xml"/>
     <import resource="tx-config.xml"/>
     <import resource="dao-config.xml"/>

@@ -1,7 +1,8 @@
 package com.lucho.util;
 
 import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.
+UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
