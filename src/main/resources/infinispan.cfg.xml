@@ -235,7 +235,7 @@
 						value="env/DataSource" />
 
                     <property name="idColumnType" value="varchar(255)" />
-					<property name="dataColumnType" value="varbinary" />
+					<property name="dataColumnType" value="varbinary(8192)" />
 					<property name="dropTableOnExit" value="false" />
 					<property name="createTableOnStart" value="true" />
 				</properties>
@@ -280,7 +280,7 @@
 						value="env/DataSource" />
 
                     <property name="idColumnType" value="varchar(255)" />
-					<property name="dataColumnType" value="varbinary" />
+					<property name="dataColumnType" value="varbinary(8192)" />
 					<property name="dropTableOnExit" value="false" />
 					<property name="createTableOnStart" value="true" />
 				</properties>
@@ -325,7 +325,7 @@
 						value="env/DataSource" />
 
                     <property name="idColumnType" value="varchar(255)" />
-                    <property name="dataColumnType" value="varbinary" />
+                    <property name="dataColumnType" value="varbinary(8192)" />
                     <property name="dropTableOnExit" value="false" />
                     <property name="createTableOnStart" value="true" />
                 </properties>

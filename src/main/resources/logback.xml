@@ -8,20 +8,20 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="warn" />
+    <logger name="org.springframework" level="info" />
+    <!-- 
+    <logger name="org.atmosphere" level="warn" />
     
-    <logger name="org.atmosphere" level="debug" />
-    
-    <!-- <logger name="org.springframework.jms" level="debug" /> -->
+    <logger name="org.springframework.oauth2" level="debug" />
     
     <logger name="atomikos" level="warn" />
     
-    <!-- <logger name="org.springframework.integration" level="debug" /> -->
+    <logger name="org.springframework.integration" level="info" />
 
     <logger name="org.hibernate" level="warn" />
 
     <logger name="com.lucho" level="info" />
-
+ -->
 
     <root level="warn">
         <appender-ref ref="STDOUT" />

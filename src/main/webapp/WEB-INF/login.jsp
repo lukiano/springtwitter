@@ -14,7 +14,7 @@
     <c:if test="${not empty param.login_error}">
         <div class="error">
             Your login attempt was not successful, try again.<br/><br/>
-            Reason: <%= ((Throwable) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION)).getMessage() %>
+            Reason: ${exceptionMessage}
         </div>
     </c:if>
     <form name="f" action="spring_security_login" method="post">

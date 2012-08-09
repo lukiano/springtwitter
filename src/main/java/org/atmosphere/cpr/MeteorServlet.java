@@ -11,6 +11,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.atmosphere.cache.HeaderBroadcasterCache;
 import org.atmosphere.handler.ReflectorServletProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +94,7 @@ public final class MeteorServlet extends AtmosphereServlet {
         }
 
         framework.addAtmosphereHandler(mapping, r).initAtmosphereHandler(sc);
+        framework.setBroadcasterCacheClassName(HeaderBroadcasterCache.class.getName());
     }
 
     @Override
