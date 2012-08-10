@@ -7,9 +7,11 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -119,6 +123,26 @@ public final class LoginController {
         return returnMessage;
     }
 
+    /**
+     * Login call.
+     * @param request servlet request.
+     * @return Authentication exception string, or an empty string.
+     */
+    @RequestMapping(value = "/login")
+    @ModelAttribute("exceptionMessage")
+    public String login(final HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return "";
+        }
+        Throwable t = (Throwable) session.getAttribute(
+            WebAttributes.AUTHENTICATION_EXCEPTION);
+        if (t == null) {
+            return "";
+        }
+        return t.getLocalizedMessage();
+    }
+
         /**
         * Creates a new user with the specified user name and password.
         * @param username the name of the new user.
@@ -139,7 +163,7 @@ public final class LoginController {
      * @param username a string with the user name.
      * @return a string detailing if the user name is free to use.
      */
-    @RequestMapping(value = "/exists", method = RequestMethod.GET)
+    @RequestMapping(value = "/exists")
     @ResponseBody
     public String exists(@RequestParam(value = "name") final String username) {
         String message;
