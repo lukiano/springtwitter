@@ -1,6 +1,7 @@
 package com.lucho.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.persistence.Cacheable;
@@ -22,7 +23,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.AnalyzerDef;
 import org.hibernate.search.annotations.CacheFromIndex;
 import org.hibernate.search.annotations.DocumentId;
@@ -34,7 +34,6 @@ import org.hibernate.search.annotations.TermVector;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.lucho.repository.TweetRepository;
@@ -98,6 +97,7 @@ public class Tweet implements Serializable {
     @GeneratedValue
     @JsonIgnore
     @DocumentId
+    @org.springframework.data.annotation.Id
     private Integer id;
 
     /**
@@ -108,6 +108,7 @@ public class Tweet implements Serializable {
     @Field(index = Index.YES, store = Store.COMPRESS,
         termVector = TermVector.WITH_POSITION_OFFSETS)
     @JsonProperty
+    @org.springframework.data.mongodb.core.index.Indexed
     private String tweet;
 
     /**
@@ -130,9 +131,9 @@ public class Tweet implements Serializable {
      */
     @NotNull
     @Past
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonProperty
-    private DateTime creationDate;
+    @org.springframework.data.mongodb.core.index.Indexed
+    private Date creationDate;
 
     /**
      * Default Class Constructor.
@@ -150,7 +151,8 @@ public class Tweet implements Serializable {
         this.owner = user;
         this.tweet = text;
         this.language = lang;
-        this.creationDate = new DateTime();
+        //this.creationDate = new DateTime();
+        this.creationDate = new Date();
     }
 
     /**

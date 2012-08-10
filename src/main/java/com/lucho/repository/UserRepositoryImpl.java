@@ -2,8 +2,7 @@ package com.lucho.repository;
 
 import java.util.Set;
 
-import org.springframework.data.jpa.repository.support.
-QueryDslRepositorySupport;
+import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lucho.domain.QUser;
@@ -25,7 +24,7 @@ public class UserRepositoryImpl extends QueryDslRepositorySupport
      * @return true if userToFollow is not being followed by user.
      */
     private boolean notFollowedBy(final User user, final User userToFollow) {
-        QUser quser = QUser.user;
+    	QUser quser = QUser.user;
         QUser followedBy = new QUser(quser.followedBy.getMetadata());
         return this.from(quser).join(quser.followedBy, followedBy)
                 .where(

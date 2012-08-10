@@ -14,7 +14,7 @@
     <c:if test="${not empty param.login_error}">
         <div class="error">
             No pudiste iniciar sesión. Intentá de nuevo.<br/><br/>
-            Razón: <%= ((Throwable) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION)).getMessage() %>
+            Razón: ${exceptionMessage}
         </div>
     </c:if>
     <form name="f" action="spring_security_login" method="post">

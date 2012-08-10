@@ -23,7 +23,7 @@
         
     <tx:annotation-driven mode="aspectj" />
         
-    <bean id="sessionFactory"
+    <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="cacheManagerJNDI, transactionManagerJNDI, userTransactionJNDI">
 
         <property name="dataSource" ref="xaDataSource" />
@@ -51,6 +51,8 @@
 
     <bean class="com.lucho.domain.Tweet" scope="prototype" />
     <bean class="com.lucho.domain.User" scope="prototype" />
+    
+    <import resource="mongodb-config.xml" />
 
     <beans profile="master">
         <util:properties id="hibernateProperties" location="classpath:hibernate-master.properties"/>

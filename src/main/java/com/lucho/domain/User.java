@@ -23,6 +23,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -90,6 +91,7 @@ public class User implements UserDetails {
      * User id. It's unique.
      */
     @Id
+    @org.springframework.data.annotation.Id
     @GeneratedValue
     private Integer id;
 
@@ -99,6 +101,7 @@ public class User implements UserDetails {
     @NotEmpty
     @Size(max = MAX_USER_LENGTH)
     @Column(name = "username")
+    @Indexed
     private String username;
 
     /**
