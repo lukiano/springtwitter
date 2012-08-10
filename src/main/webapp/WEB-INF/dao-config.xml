@@ -67,5 +67,9 @@
 	<beans profile="mssqlserver">
 		<util:properties id="jdbcConfiguration" location="classpath:mssqlserverjdbc.properties"/>
 	</beans>    
+
+	<beans profile="mysql">
+		<util:properties id="jdbcConfiguration" location="classpath:mysqljdbc.properties"/>
+	</beans>    
 	    
 </beans>

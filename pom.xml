@@ -21,6 +21,7 @@
 		<tiles.version>2.2.2</tiles.version>
 		<slf4j.version>1.6.6</slf4j.version>
 		<jackson.version>1.9.6</jackson.version>
+		<jackson2.version>2.0.5</jackson2.version>
 		<hibernate.version>4.1.4.Final</hibernate.version>
 		<hibernate.search.version>4.1.1.Final</hibernate.search.version>
 		<hibernate.validator.version>4.3.0.Final</hibernate.validator.version>
@@ -150,6 +151,19 @@
 			</dependencies>
 		</profile>
 		<profile>
+			<id>mysql</id>
+			<properties>
+				<database.profile>mysql</database.profile>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<version>5.1.21</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
 			<id>h2</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -172,6 +186,7 @@
 					<groupId>org.springframework</groupId>
 					<artifactId>spring-instrument-tomcat</artifactId>
 					<version>${spring.version}</version>
+					<scope>provided</scope>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -287,7 +302,7 @@
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
-			<version>1.0.0.M6d</version>
+			<version>1.0.0.RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>
@@ -299,17 +314,17 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>1.1.0.RELEASE</version>
+			<version>1.1.1.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
-			<version>1.1.0.BUILD-SNAPSHOT</version>
+			<version>1.1.0.M2</version>
 		</dependency>
     	<dependency>
       		<groupId>org.springframework.data</groupId>
       		<artifactId>spring-data-mongodb-cross-store</artifactId>
-      		<version>1.1.0.BUILD-SNAPSHOT</version>
+      		<version>1.1.0.M2</version>
     		</dependency>		
 		
 		<!-- Spring Integration -->
@@ -580,7 +595,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Jackson JSON -->
+		<!-- Jackson JSON
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
@@ -607,7 +622,40 @@
 			<artifactId>usertype.core</artifactId>
 			<version>3.0.0.CR1</version>
 		</dependency>
-
+		-->
+		
+		<!-- Jackson 2 JSON -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-guava</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate4</artifactId>
+			<version>2.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>2.0.4</version>
+		</dependency>
+		
 		<!-- Joda Time -->
 		<dependency>
 			<groupId>joda-time</groupId>
