@@ -14,6 +14,8 @@
         <aspect name="org.springframework.transaction.aspectj.AnnotationTransactionAspect"/>
         <aspect name="org.springframework.cache.aspectj.AnnotationCacheAspect"/>
         <aspect name="org.springframework.security.access.intercept.aspectj.aspect.AnnotationSecurityAspect" />
+        <!-- 
         <aspect name="org.springframework.data.mongodb.crossstore.MongoDocumentBacking"/>
+         -->
     </aspects>
 </aspectj>

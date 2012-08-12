@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-<<<<<<< HEAD
-    <!-- <Loader loaderClass="org.springframework.instrument.classloading.tomcat.TomcatInstrumentableClassLoader" delegate="true" />   -->
-=======
     <!-- <Loader loaderClass="org.springframework.instrument.classloading.tomcat.TomcatInstrumentableClassLoader" delegate="true" /> -->
->>>>>>> 9019d4ff901048a7fb2961065c3e734487e69682
     <Loader delegate="true" />
 </Context>

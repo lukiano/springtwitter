@@ -6,10 +6,9 @@
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://activemq.apache.org/schema/core
-        http://activemq.apache.org/schema/core/activemq-core-5.5.0.xsd">
-
-
-    <amq:broker id="twBroker" useJmx="true" brokerName="twBroker" persistent="true" useShutdownHook="true">
+        http://activemq.apache.org/schema/core/activemq-core-5.6.0.xsd">
+        
+    <amq:broker id="twBroker" useJmx="true" brokerName="twBroker" persistent="true" useShutdownHook="true" enableStatistics="true" >
         <amq:destinationPolicy>
             <amq:policyMap>
                 <amq:policyEntries>
@@ -27,13 +26,13 @@
             </amq:policyMap>
         </amq:destinationPolicy>
         <amq:managementContext>
-            <amq:managementContext createConnector="true" connectorPort="2011" />
+            <amq:managementContext createConnector="false" />
         </amq:managementContext>
         <amq:networkConnectors>
             <amq:networkConnector uri="multicast://default?group=23"/>
         </amq:networkConnectors>
         <amq:persistenceAdapter>
-            <amq:kahaDB directory="/Users/luciano/workspace3/springtwitter/activemq-${broker.port}-data" journalMaxFileLength="32mb"/>
+            <amq:kahaDB directory="/activemq-${broker.port}-data" journalMaxFileLength="32mb"/>
         </amq:persistenceAdapter>
         <amq:transportConnectors>
             <amq:transportConnector uri="tcp://localhost:${broker.port}" discoveryUri="multicast://default?group=23" />
@@ -50,18 +49,17 @@
         <constructor-arg index="1" value="ConnectionFactory" />
     </bean>
 
-    <!--
+	<!--
          Where do we send updated time table info to?
          Note: this is a topic to allow multiple subscribers.
-    -->
+      -->
     <bean id="daTopic" class="org.apache.activemq.command.ActiveMQTopic">
         <property name="physicalName" value="DATOPIC" />
     </bean>
 
     <!--
       JMS template for easy sending of update messages with Spring.
-      Used by Spring Integration because SI does not have a direct way to set sessionTransacted attribute.
-    -->
+      Used by Spring Integration because SI does not have a direct way to set sessionTransacted attribute. -->
     <bean id="jmsTemplate"
           class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="connectionFactory" />
@@ -70,9 +68,8 @@
         <property name="pubSubDomain" value="true" />
         <property name="sessionTransacted" value="true" />
     </bean>
-    
+
     <beans profile="master">
-	     
 	    <bean id="searchQueue" class="org.apache.activemq.command.ActiveMQQueue">
 	        <property name="physicalName" value="SEARCHQUEUE" />
 	    </bean>
@@ -81,11 +78,9 @@
             <constructor-arg index="0" ref="searchQueue" />
             <constructor-arg index="1" value="SearchQueue" />
         </bean>
-    
     </beans>
     
-    <beans profile="slave">
-    </beans>
+    <beans profile="slave"></beans>
 
     <beans profile="bitronix">
         <bean id="connectionFactory" class="bitronix.tm.resource.jms.PoolingConnectionFactory" init-method="init" destroy-method="close" depends-on="twBroker">
@@ -99,7 +94,7 @@
             </property>
         </bean>
     </beans>
-
+ 
     <beans profile="atomikos">
         <bean id="connectionFactory"
               class="com.atomikos.jms.AtomikosConnectionFactoryBean"

@@ -51,9 +51,9 @@
 
     <bean class="com.lucho.domain.Tweet" scope="prototype" />
     <bean class="com.lucho.domain.User" scope="prototype" />
-    
+    <!-- 
     <import resource="mongodb-config.xml" />
-
+ 	-->
     <beans profile="master">
         <util:properties id="hibernateProperties" location="classpath:hibernate-master.properties"/>
 

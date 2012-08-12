@@ -16,14 +16,14 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.lucho.security" />
 
-	<sec:http auto-config="false" entry-point-ref="basicEntryPoint">
-		<sec:intercept-url pattern="/login"
+	<sec:http auto-config="false"  entry-point-ref="basicEntryPoint" >
+		<sec:intercept-url pattern="/"
 			access="ROLE_ANONYMOUS,ROLE_USER" />
 		<sec:intercept-url pattern="/signup" access="ROLE_ANONYMOUS" />
 		<sec:intercept-url pattern="/t/**" access="ROLE_USER" />
 		<sec:intercept-url pattern="/oauth/authorize"
 			access="ROLE_USER" />
-		<sec:logout logout-url="/logout" logout-success-url="/login" />
+		<sec:logout logout-url="/logout" logout-success-url="/" />
 		<sec:custom-filter position="CONCURRENT_SESSION_FILTER"
 			ref="concurrencyFilter" />
 		<sec:custom-filter position="FORM_LOGIN_FILTER"
@@ -63,8 +63,6 @@
 		<constructor-arg index="1" value="/session-expired.htm" />
 	</bean>
 
-	<!-- <sec:form-login login-page="/login" login-processing-url="/loginProcess" 
-		default-target-url="/t/home" authentication-failure-url="/login?login_error=1"/> -->
 	<bean id="userNameAndPasswordAuthFilter"
 		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 		<property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy" />
@@ -114,7 +112,7 @@
 	<bean id="tokenRepository"
 		class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
 		<property name="dataSource" ref="dataSource" />
-		<property name="createTableOnStartup" value="true" />
+		<property name="createTableOnStartup" value="false" />
 	</bean>
 
 	<bean id="rememberMeAuthenticationProvider"
