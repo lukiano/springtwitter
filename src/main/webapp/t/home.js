@@ -16,8 +16,8 @@ function checkForNewTweets() {
 }
 
 function initTimerAndUpdateTimestamp(lastTimestamp) {
+	"use strict";
 	lastUpdate = lastTimestamp;
-	//var refreshIntervalId = window.setInterval(checkForNewTweets, 10000);
     window.setInterval(checkForNewTweets, 10000);
 }
 

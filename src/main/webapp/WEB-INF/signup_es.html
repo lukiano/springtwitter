@@ -1,33 +1,36 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
     <title>Spring Twitter</title>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js">
-    </script>
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"></link>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <fieldset>
-        <legend>¡Bienvenido!</legend>
-        <p>
-            <label for="j_username">¿Cuál es tu nombre?</label>
-            <br/>
-            <input type="text" name="j_username" id="j_username"/>
-            <span id="checkname"></span>
-        </p>
-
-        <p>
-            <label for="j_password">Clave:</label>
-            <br/>
-            <input type="password" name="j_password" id="j_password"/>
-        </p>
-
-        <p>
-            <button id="register" type="button">¡Registrame!</button>
-        </p>
-    </fieldset>
-	<p>
-		<a href="login">Go back to login page</a>
-	</p>
+	<div class="container">
+		<form name="f" id="f" action="spring_security_login" class="form-horizontal" method="post">
+		    <fieldset>
+		        <legend>¡Bienvenido!</legend>
+		        <div class="control-group">
+		            <label class="control-label" for="j_username">¿Cuál es tu nombre?</label>
+		            <div class="controls">
+		            	<input type="text" name="j_username" id="j_username"></input>
+			            <span class="help-inline" id="checkname"></span>
+		            </div>
+		        </div>
+				<div class="control-group"> 
+		            <label class="control-label" for="j_password">Clave</label>
+		            <div class="controls">
+		            	<input type="password" name="j_password" id="j_password"></input>
+		            </div>
+				</div>
+		        <div class="form-actions">
+		            <button class="btn btn-primary" id="register" type="button">¡Registrame!</button>
+		            <button class="btn" id="goback">Regresar a la pantalla principal</button>
+		        </div>
+		    </fieldset>
+		</form>
+	</div>	
 	<script type="text/javascript" src="signup.js"></script>
 	<script type="text/javascript">
 		$(document).ready(ready);

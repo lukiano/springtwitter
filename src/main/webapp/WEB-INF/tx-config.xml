@@ -3,138 +3,94 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-	<beans profile="atomikos">
+    <!-- Optional: add a log administrator
+<bean id="localLogAdministrator" class="com.atomikos.icatch.admin.imp.LocalLogAdministrator"/>
+ -->
 
-		<!-- Optional: add a log administrator 
-		<bean id="localLogAdministrator" class="com.atomikos.icatch.admin.imp.LocalLogAdministrator"/>
-		 -->
- 		
- 		<bean id="userTransactionService"  
-		  class="com.atomikos.icatch.config.UserTransactionServiceImp"  
-		  init-method="init" destroy-method="shutdownForce"> 
-		    <constructor-arg> 
-		        <!-- IMPORTANT: specify all Atomikos properties here --> 
-		        <props> 
-		            <prop key="com.atomikos.icatch.service"> 
-		              com.atomikos.icatch.standalone.UserTransactionServiceFactory 
-		            </prop> 
-		        </props> 
-		    </constructor-arg> 
-		    <!-- 
-		    <property name="initialLogAdministrators"> 
-		        <list> 
-		            <ref bean="localLogAdministrator"/> 
-		        </list> 
-		    </property>
-		     --> 
-		</bean>
-			 
-		<!-- Construct Atomikos UserTransactionManager, needed to configure Spring -->
-		<bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
-			init-method="init" destroy-method="close" depends-on="userTransactionService"> 
- 
-   			<!-- IMPORTANT: disable startup because the userTransactionService above does this --> 
-   			<property name="startupTransactionService" value="false"/> 
-	
-			<property name="forceShutdown" value="false" />
-		</bean>
-	
-		<!-- Also use Atomikos UserTransactionImp, needed to configure Spring -->
-		<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.J2eeUserTransaction"
-			depends-on="userTransactionService">
-			
-			<property name="transactionTimeout" value="300" />
-			
-		</bean>
-	
-		<!-- Configure the Spring framework to use JTA transactions from Atomikos -->
-		<bean id="transactionManager" 
-			class="org.springframework.transaction.jta.JtaTransactionManager">
-			<property name="transactionManager" ref="atomikosTransactionManager" />
-			<property name="userTransaction" ref="atomikosUserTransaction" />
-			<property name="allowCustomIsolationLevels" value="true" />
-		</bean>
+    <bean id="userTransactionService"
+          class="com.atomikos.icatch.config.UserTransactionServiceImp"
+          init-method="init" destroy-method="shutdownForce">
+        <constructor-arg>
+            <!-- IMPORTANT: specify all Atomikos properties here -->
+            <props>
+                <prop key="com.atomikos.icatch.service">
+                    com.atomikos.icatch.standalone.UserTransactionServiceFactory
+                </prop>
+            </props>
+        </constructor-arg>
+        <!--
+        <property name="initialLogAdministrators">
+            <list>
+                <ref bean="localLogAdministrator"/>
+            </list>
+        </property>
+         -->
+    </bean>
 
-	    <bean id="transactionManagerJNDI" class="com.lucho.util.JNDIExporter">
-	        <constructor-arg index="0" ref="atomikosTransactionManager" />
-	        <constructor-arg index="1" value="TransactionManager" />
-	    </bean>
-	    
-        <bean id="userTransactionJNDI" class="com.lucho.util.JNDIExporter">
-            <constructor-arg index="0" ref="atomikosUserTransaction" />
-            <constructor-arg index="1" value="UserTransaction" />
-        </bean>
-        
-        <!--  
-		     Configure the Atomikos JMX transaction  
-		     service to administer pending transactions  
-		--> 
-		<bean id="jmxTransactionService" class="com.atomikos.icatch.admin.jmx.JmxTransactionService"> 
-		    <!-- Optional: show only heuristic problem cases --> 
-		    <!-- <property name="heuristicsOnly" value="true"/>  --> 
-		</bean> 
-		 
-		<!-- Spring JMX config --> 
-		<bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
-			<property name="locateExistingServerIfPossible" value="true" />
-		</bean> 
-		 
-		<!--  
-		     Export the Atomikos JMX transaction service  
-		     to the local JMX service in the running VM (1.5 or higher)  
-		--> 
-		<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"> 
-		        <property name="beans"> 
-		            <map> 
-		                <entry key="atomikos:name=tx-service"> 
-		                    <ref bean="jmxTransactionService"/> 
-		                </entry> 
-		            </map> 
-		        </property> 
-		        <property name="server"> 
-		            <ref bean="mbeanServer"/> 
-		        </property> 
-		</bean> 
+    <!-- Construct Atomikos UserTransactionManager, needed to configure Spring -->
+    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
+          init-method="init" destroy-method="close" depends-on="userTransactionService">
 
-    </beans>
-    
-    <beans profile="bitronix">
-        <!-- 
-	    <bean id="bitronixInfinispanLoader"
-	          class="bitronix.tm.resource.infinispan.BitronixInfinispanLoader" />
-	           -->
-	
-		<!-- Bitronix Transaction Manager embedded configuration -->
-		<bean id="btmConfig" factory-method="getConfiguration"
-			class="bitronix.tm.TransactionManagerServices" >
-			<property name="serverId" value="spring-btm" />
-		</bean>
-	
-		<!-- create BTM transaction manager
-		<bean id="bitronixTransactionManager"
-			class="com.lucho.util.BitronixTransactionManager" depends-on="btmConfig"
-			destroy-method="shutdown" />
-	 -->
-		<!-- Configure the Spring framework to use JTA transactions from Bitronix -->
-		<bean id="transactionManager"
-			class="org.springframework.transaction.jta.JtaTransactionManager">
-			<property name="transactionManager" ref="bitronixTransactionManager" />
-			<property name="userTransaction" ref="bitronixTransactionManager" />
-			<property name="allowCustomIsolationLevels" value="true" />
-		</bean>
+        <!-- IMPORTANT: disable startup because the userTransactionService above does this -->
+        <property name="startupTransactionService" value="false"/>
 
-        <bean id="transactionManagerJNDI" class="com.lucho.util.JNDIExporter">
-            <constructor-arg index="0" ref="bitronixTransactionManager" />
-            <constructor-arg index="1" value="TransactionManager" />
-        </bean>
-        
-        <bean id="userTransactionJNDI" class="com.lucho.util.JNDIExporter">
-            <constructor-arg index="0" ref="bitronixTransactionManager" />
-            <constructor-arg index="1" value="UserTransaction" />
-        </bean>
-		
-	</beans>
-	
+        <property name="forceShutdown" value="false" />
+    </bean>
+
+    <!-- Also use Atomikos UserTransactionImp, needed to configure Spring -->
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.J2eeUserTransaction"
+          depends-on="userTransactionService">
+
+        <property name="transactionTimeout" value="300" />
+
+    </bean>
+
+    <!-- Configure the Spring framework to use JTA transactions from Atomikos -->
+    <bean id="transactionManager"
+          class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="atomikosTransactionManager" />
+        <property name="userTransaction" ref="atomikosUserTransaction" />
+        <property name="allowCustomIsolationLevels" value="true" />
+    </bean>
+
+    <bean id="transactionManagerJNDI" class="com.lucho.util.JNDIExporter">
+        <constructor-arg index="0" ref="atomikosTransactionManager" />
+        <constructor-arg index="1" value="TransactionManager" />
+    </bean>
+
+    <bean id="userTransactionJNDI" class="com.lucho.util.JNDIExporter">
+        <constructor-arg index="0" ref="atomikosUserTransaction" />
+        <constructor-arg index="1" value="UserTransaction" />
+    </bean>
+
+    <!--
+         Configure the Atomikos JMX transaction
+         service to administer pending transactions
+    -->
+    <bean id="jmxTransactionService" class="com.atomikos.icatch.admin.jmx.JmxTransactionService">
+        <!-- Optional: show only heuristic problem cases -->
+        <!-- <property name="heuristicsOnly" value="true"/>  -->
+    </bean>
+
+    <!-- Spring JMX config -->
+    <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">
+        <property name="locateExistingServerIfPossible" value="true" />
+    </bean>
+
+    <!--
+         Export the Atomikos JMX transaction service
+         to the local JMX service in the running VM (1.5 or higher)
+    -->
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+        <property name="beans">
+            <map>
+                <entry key="atomikos:name=tx-service" value-ref="jmxTransactionService" />
+            </map>
+        </property>
+        <property name="server" ref="mbeanServer" />
+    </bean>
+
+
 </beans>

@@ -8,7 +8,7 @@ import java.util.Locale;
  * @author Luciano.Leggieri
  */
 public final class TilesViewResolver extends
-        org.springframework.web.servlet.view.tiles2.TilesViewResolver {
+        org.springframework.web.servlet.view.tiles3.TilesViewResolver {
 
     /**
      * {@inheritDoc}

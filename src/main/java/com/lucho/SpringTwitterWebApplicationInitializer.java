@@ -1,6 +1,10 @@
 package com.lucho;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import java.util.EnumSet;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
@@ -13,14 +17,10 @@ import javax.servlet.ServletRegistration;
 import org.atmosphere.cpr.MeteorServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextCleanupListener;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.support.XmlWebApplicationContext;
+import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import static java.lang.Boolean.TRUE;
 
 /**
  * @author Luciano.Leggieri
@@ -31,8 +31,8 @@ public final class SpringTwitterWebApplicationInitializer implements
     /**
      * Websocket timeout in milliseconds.
      */
-    private static final String WEBSOCKET_INACTIVITY_TIMEOUT_IN_MILLIS =
-            Integer.toString(30 * 60 * 1000);
+    private static final long WEBSOCKET_INACTIVITY_TIMEOUT_IN_MILLIS =
+            TimeUnit.MINUTES.toMillis(30);
 
     /**
      * {@inheritDoc}
@@ -40,40 +40,61 @@ public final class SpringTwitterWebApplicationInitializer implements
     @Override
     public void onStartup(final ServletContext servletContext)
             throws ServletException {
-        ContextLoader contextLoader = new ContextLoader();
-        ConfigurableWebApplicationContext rootWac =
-                (ConfigurableWebApplicationContext) contextLoader
-                .initWebApplicationContext(servletContext);
 
-        ConfigurableWebApplicationContext repositoryWac = buildContext(
-                servletContext, rootWac, "/WEB-INF/jpa-config.xml", true);
-        ConfigurableWebApplicationContext securityWac = buildContext(
-                servletContext, repositoryWac, "/WEB-INF/security-config.xml",
-                true);
-        ConfigurableWebApplicationContext integrationWac = buildContext(
-                servletContext, securityWac, "/WEB-INF/integration-config.xml",
-                true);
-        ConfigurableWebApplicationContext servletWac = buildContext(
-                servletContext, integrationWac, "/WEB-INF/tweeter-servlet.xml",
-                false);
+        XmlWebApplicationContext rootWac = new XmlWebApplicationContext(null);
+        //ContextLoaderListener rootCll = new SimpleContextLoaderListener(null, rootWac);
+        //servletContext.addListener(rootCll);
+        rootWac.setServletContext(servletContext);
+        rootWac.refresh();
+        
+    	XmlWebApplicationContext repositoryWac = new XmlWebApplicationContext(rootWac);
+    	repositoryWac.setNamespace("jpa-config");
+        repositoryWac.setServletContext(servletContext);
+        repositoryWac.refresh();
+//    	ContextLoaderListener repositoryCll = new SimpleContextLoaderListener(rootWac, repositoryWac);
+//    	servletContext.addListener(repositoryCll);
+
+    	XmlWebApplicationContext securityWac = new XmlWebApplicationContext(repositoryWac);
+    	securityWac.setNamespace("security-config");
+        securityWac.setServletContext(servletContext);
+        securityWac.refresh();
+//    	ContextLoaderListener securityCll = new SimpleContextLoaderListener(repositoryWac, securityWac);
+//    	servletContext.addListener(securityCll);
+
+    	XmlWebApplicationContext integrationWac = new XmlWebApplicationContext(securityWac);
+    	integrationWac.setNamespace("integration-config");
+        integrationWac.setServletContext(servletContext);
+        integrationWac.refresh();
+//    	ContextLoaderListener integrationCll = new SimpleContextLoaderListener(securityWac, integrationWac);
+//    	servletContext.addListener(integrationCll);
+
+    	ContextLoaderListener rootCll = new SimpleContextLoaderListener(securityWac, integrationWac);
+    	servletContext.addListener(rootCll);
 
         servletContext.addListener(HttpSessionEventPublisher.class);
         servletContext.addListener(ContextCleanupListener.class);
 
+    	XmlWebApplicationContext servletWac = new XmlWebApplicationContext(integrationWac);
+        servletWac.setNamespace("tweeter-servlet");
+
         if (rootWac.getEnvironment().acceptsProfiles("websockets")) {
-            Filter securityFilter = new DelegatingFilterProxy(
+            Filter rcf = new DelegatingFilterProxy(
+                    "requestContextFilter", securityWac);
+            Filter ssfc = new DelegatingFilterProxy(
                     "springSecurityFilterChain", securityWac);
             Servlet dispatcherServlet = new DispatcherServlet(servletWac);
             MeteorServlet meteorServlet = new MeteorServlet(dispatcherServlet);
             meteorServlet
-                    .addFilter(securityFilter, "springSecurityFilterChain");
+                    .addFilter(rcf, "springSecurityFilterChain");
+            meteorServlet
+                    .addFilter(ssfc, "springSecurityFilterChain");
             ServletRegistration.Dynamic dispatcher = servletContext.addServlet(
                     "tweeter", meteorServlet);
             dispatcher.setInitParameter("org.atmosphere.cpr.broadcasterClass",
                     "org.atmosphere.cpr.DefaultBroadcaster");
             dispatcher.setInitParameter(
                     "org.atmosphere.cpr.CometSupport.maxInactiveActivity",
-                    WEBSOCKET_INACTIVITY_TIMEOUT_IN_MILLIS);
+                    Long.toString(WEBSOCKET_INACTIVITY_TIMEOUT_IN_MILLIS));
             dispatcher.setInitParameter("org.atmosphere.useStream",
                     TRUE.toString());
             dispatcher.setInitParameter("org.atmosphere.useWebSocket",
@@ -82,7 +103,7 @@ public final class SpringTwitterWebApplicationInitializer implements
                     TRUE.toString());
             dispatcher.setInitParameter(
                     "org.atmosphere.cpr.broadcaster.shareableThreadPool",
-                    TRUE.toString());
+                    FALSE.toString());
             dispatcher.setInitParameter(
                     "org.atmosphere.cpr.broadcasterLifeCyclePolicy", "IDLE");
             dispatcher.setInitParameter(
@@ -93,10 +114,17 @@ public final class SpringTwitterWebApplicationInitializer implements
             dispatcher.setLoadOnStartup(1);
             dispatcher.addMapping("/");
         } else {
-            FilterRegistration fr = servletContext.addFilter(
+            FilterRegistration rcf = servletContext.addFilter(
+                    "requestContextFilter", new DelegatingFilterProxy(
+                            "requestContextFilter", securityWac));
+            rcf.addMappingForUrlPatterns(
+                    EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD),
+                    false, "/*");
+
+            FilterRegistration ssfc = servletContext.addFilter(
                     "springSecurityFilterChain", new DelegatingFilterProxy(
                             "springSecurityFilterChain", securityWac));
-            fr.addMappingForUrlPatterns(
+            ssfc.addMappingForUrlPatterns(
                     EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD),
                     false, "/*");
 
@@ -105,42 +133,7 @@ public final class SpringTwitterWebApplicationInitializer implements
             dispatcher.setLoadOnStartup(1);
             dispatcher.addMapping("/");
         }
-
-    }
-
-    /**
-     * Builds a web application context.
-     * @param servletContext servlet context.
-     * @param parent parent web application context.
-     * @param configLocation location of the config xml.
-     * @param refresh true if the context should be activated.
-     * @return a Spring's web application context with its beans loaded from the
-     *         location file.
-     */
-    private ConfigurableWebApplicationContext buildContext(
-            final ServletContext servletContext,
-            final ConfigurableWebApplicationContext parent,
-            final String configLocation, final boolean refresh) {
-        XmlWebApplicationContext wac = new XmlWebApplicationContext() {
-
-            @Override
-            protected String[] getDefaultConfigLocations() {
-                return new String[] {configLocation};
-            }
-
-            @Override
-            protected void onClose() {
-                super.onClose();
-                parent.close();
-            }
-        };
-        wac.setParent(parent);
-        wac.setServletContext(servletContext);
-        if (refresh) {
-            wac.refresh();
-        }
-        wac.registerShutdownHook();
-        return wac;
+        
     }
 
 }

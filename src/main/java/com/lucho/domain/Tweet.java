@@ -108,7 +108,7 @@ public class Tweet implements Serializable {
     @Field(index = Index.YES, store = Store.COMPRESS,
         termVector = TermVector.WITH_POSITION_OFFSETS)
     @JsonProperty
-    @org.springframework.data.mongodb.core.index.Indexed
+    //@org.springframework.data.mongodb.core.index.Indexed
     private String tweet;
 
     /**
@@ -132,7 +132,7 @@ public class Tweet implements Serializable {
     @NotNull
     @Past
     @JsonProperty
-    @org.springframework.data.mongodb.core.index.Indexed
+    //@org.springframework.data.mongodb.core.index.Indexed
     private Date creationDate;
 
     /**
@@ -178,7 +178,7 @@ public class Tweet implements Serializable {
      */
     @JsonIgnore
     public final void save() {
-        this.tweetRepository.save(this);
+        this.tweetRepository.saveAndFlush(this);
     }
 
 }

@@ -1,4 +1,5 @@
 function webSocketsCallback(response) {
+	"use strict";
 	var i, tweet;
 	var message = response.responseBody;
 	try {

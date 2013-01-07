@@ -3,22 +3,14 @@ package com.lucho.controller;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 import org.atmosphere.cpr.AtmosphereResource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.lucho.domain.Tweet;
 import com.lucho.domain.User;
@@ -75,62 +67,6 @@ public final class TweetController {
     public Tweet newTweet(@Principal final User user,
             @RequestParam(value = "tweet") final String text) {
         return this.tweetService.newTweet(user, text);
-    }
-
-    /**
-     * Shows a friendly message instead of the exception stack trace.
-     * @param pe exception.
-     * @return the exception message.
-     */
-    @ExceptionHandler(PersistenceException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handlePersistenceException(final PersistenceException pe) {
-        String returnMessage;
-        if (pe.getCause() instanceof ConstraintViolationException) {
-            ConstraintViolationException cve = (ConstraintViolationException) pe
-                    .getCause();
-            ConstraintViolation<?> cv = cve.getConstraintViolations()
-                    .iterator().next();
-            returnMessage = cv.getMessage();
-        } else {
-            returnMessage = pe.getLocalizedMessage();
-        }
-        return returnMessage;
-    }
-
-    /**
-     * Shows a friendly message instead of the exception stack trace.
-     * @param de exception.
-     * @return the exception message.
-     */
-    @ExceptionHandler(DataAccessException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleDataAccessException(final DataAccessException de) {
-        return de.getLocalizedMessage();
-    }
-
-    /**
-     * Shows a friendly message instead of the exception stack trace.
-     * @param te exception.
-     * @return the exception message.
-     */
-    @ExceptionHandler(TransactionException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleTransactionException(final TransactionException te) {
-        String returnMessage;
-        if (te.getMostSpecificCause() instanceof ConstraintViolationException) {
-            ConstraintViolationException cve = (ConstraintViolationException) te
-                    .getMostSpecificCause();
-            ConstraintViolation<?> cv = cve.getConstraintViolations()
-                    .iterator().next();
-            returnMessage = cv.getMessage();
-        } else {
-            returnMessage = te.getLocalizedMessage();
-        }
-        return returnMessage;
     }
 
     /**

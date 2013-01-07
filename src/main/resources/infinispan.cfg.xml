@@ -55,7 +55,7 @@
     <!-- Default configuration is appropriate for entity/collection caching. -->
     <namedCache name="entity">
         <clustering mode="invalidation">
-            <stateRetrieval fetchInMemoryState="true" timeout="20000"/>
+            <stateTransfer fetchInMemoryState="true" timeout="20000"/>
             <sync replTimeout="20000"/>
         </clustering>
         <locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000"
@@ -72,7 +72,7 @@
     <!-- Default configuration is appropriate for entity/collection caching. -->
     <namedCache name="entity-repeatable">
         <clustering mode="invalidation">
-            <stateRetrieval fetchInMemoryState="true" timeout="20000"/>
+            <stateTransfer fetchInMemoryState="true" timeout="20000"/>
             <sync replTimeout="20000"/>
         </clustering>
         <!-- Note: REPEATABLE_READ is only useful if the application evicts/clears entities
@@ -95,7 +95,7 @@
     <!-- An alternative configuration for entity/collection caching that uses replication instead of invalidation -->
     <namedCache name="replicated-entity">
         <clustering mode="replication">
-            <stateRetrieval fetchInMemoryState="true" timeout="20000" />
+            <stateTransfer fetchInMemoryState="true" timeout="20000" />
             <sync replTimeout="20000"/>
         </clustering>
         <transaction useSynchronization="true" transactionMode="TRANSACTIONAL" autoCommit="false"
@@ -203,7 +203,7 @@
 	<!-- *************************************** -->
 	<namedCache name="LuceneIndexesMetadata">
 		<clustering mode="replication">
-			<stateRetrieval fetchInMemoryState="true" />
+			<stateTransfer fetchInMemoryState="true" />
 			<sync replTimeout="20000" />
 		</clustering>
 		<transaction useSynchronization="true" transactionMode="TRANSACTIONAL"
@@ -248,7 +248,7 @@
 	<!-- **************************** -->
 	<namedCache name="LuceneIndexesData">
 		<clustering mode="replication">
-			<stateRetrieval fetchInMemoryState="true" />
+			<stateTransfer fetchInMemoryState="true" />
 			<sync replTimeout="20000" />
 		</clustering>
         <locking isolationLevel="REPEATABLE_READ" lockAcquisitionTimeout="20000" writeSkewCheck="false"
@@ -293,7 +293,7 @@
 	<!-- ***************************** -->
 	<namedCache name="LuceneIndexesLocking">
 		<clustering mode="replication">
-			<stateRetrieval fetchInMemoryState="true" />
+			<stateTransfer fetchInMemoryState="true" />
 			<sync replTimeout="20000" />
 		</clustering>
         <locking isolationLevel="REPEATABLE_READ" lockAcquisitionTimeout="20000" writeSkewCheck="false"

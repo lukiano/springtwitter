@@ -23,7 +23,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -101,7 +100,7 @@ public class User implements UserDetails {
     @NotEmpty
     @Size(max = MAX_USER_LENGTH)
     @Column(name = "username")
-    @Indexed
+    //@org.springframework.data.mongodb.core.index.Indexed
     private String username;
 
     /**
@@ -252,7 +251,7 @@ public class User implements UserDetails {
      */
     @JsonIgnore
     public final void save() {
-        this.userRepository.save(this);
+        this.userRepository.saveAndFlush(this);
     }
 
     /**

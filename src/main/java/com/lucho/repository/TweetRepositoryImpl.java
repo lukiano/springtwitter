@@ -1,5 +1,6 @@
 package com.lucho.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.lucene.search.Query;
@@ -9,9 +10,7 @@ import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.DatabaseRetrievalMethod;
 import org.hibernate.search.query.ObjectLookupMethod;
 import org.hibernate.search.query.dsl.QueryBuilder;
-import org.joda.time.DateTime;
-import org.springframework.data.jpa.repository.support.
-QueryDslRepositorySupport;
+import org.springframework.data.jpa.repository.support.QueryDslRepositorySupport;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lucho.domain.QTweet;
@@ -32,6 +31,10 @@ public class TweetRepositoryImpl extends QueryDslRepositorySupport implements
      * Maximum number of tweets to return in a search.
      */
     private static final int MAX_RESULTS = 20;
+    
+    public TweetRepositoryImpl() {
+    	super(Tweet.class);
+    }
 
     /**
      * {@inheritDoc}
@@ -43,8 +46,8 @@ public class TweetRepositoryImpl extends QueryDslRepositorySupport implements
         QUser followedBy = new QUser("followedBy");
         BooleanExpression whereClause = followedBy.id.eq(user.getId());
         if (millis != null) {
-            DateTime dateTime = new DateTime(millis.longValue());
-            whereClause = whereClause.and(qtweet.creationDate.after(dateTime));
+            Date date = new Date(millis.longValue());
+            whereClause = whereClause.and(qtweet.creationDate.after(date));
         }
         return this.from(qtweet).join(qtweet.owner.followedBy, followedBy)
                 .where(whereClause).orderBy(qtweet.creationDate.desc())

@@ -17,6 +17,10 @@ import com.lucho.domain.User;
 public class UserRepositoryImpl extends QueryDslRepositorySupport
         implements UserRepositoryCustom {
 
+    public UserRepositoryImpl() {
+    	super(User.class);
+    }
+
     /**
      * queries if a user is not being followed by another user.
      * @param user user.
@@ -24,7 +28,7 @@ public class UserRepositoryImpl extends QueryDslRepositorySupport
      * @return true if userToFollow is not being followed by user.
      */
     private boolean notFollowedBy(final User user, final User userToFollow) {
-    	QUser quser = QUser.user;
+        QUser quser = QUser.user;
         QUser followedBy = new QUser(quser.followedBy.getMetadata());
         return this.from(quser).join(quser.followedBy, followedBy)
                 .where(

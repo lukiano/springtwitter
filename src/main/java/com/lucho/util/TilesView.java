@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Luciano.Leggieri
  */
 public final class TilesView extends
-        org.springframework.web.servlet.view.tiles2.TilesView {
+        org.springframework.web.servlet.view.tiles3.TilesView {
 
     /**
      * {@inheritDoc}

@@ -2,6 +2,7 @@ package com.lucho.controller;
 
 import com.lucho.domain.User;
 import com.lucho.repository.UserRepository;
+
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DataAccessException;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 /**
  * Controller that provides login related endpoints.
@@ -58,26 +60,49 @@ public final class LoginController {
 
     /**
      * Shows a friendly message instead of the exception stack trace.
+     * @param ve exception.
+     * @return the exception message.
+     */
+    @ExceptionHandler(ValidationException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Message handleValidationException(final ValidationException ve) {
+        Message returnMessage;
+        if (ve instanceof ConstraintViolationException) {
+            ConstraintViolationException cve =
+                    (ConstraintViolationException) ve;
+            ConstraintViolation<?> cv =
+                    cve.getConstraintViolations().iterator().next();
+            returnMessage = Message.build(cv.getMessage());
+        } else {
+            returnMessage = Message.build(ve.getLocalizedMessage());
+        }
+        return returnMessage;
+    }
+
+    /**
+     * Shows a friendly message instead of the exception stack trace.
      * @param pe exception.
      * @return the exception message.
      */
     @ExceptionHandler(PersistenceException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handlePersistenceException(final PersistenceException pe) {
-        String returnMessage;
+    @ResponseStatus(HttpStatus.OK)
+    public Message handlePersistenceException(final PersistenceException pe) {
+        Message returnMessage;
         if (pe.getCause()
                 instanceof ConstraintViolationException) {
             ConstraintViolationException cve =
                     (ConstraintViolationException) pe.getCause();
             ConstraintViolation<?> cv =
                     cve.getConstraintViolations().iterator().next();
-            returnMessage = cv.getMessage();
+            returnMessage = Message.build(cv.getMessage());
         } else {
-            returnMessage = pe.getLocalizedMessage();
+            returnMessage = Message.build(pe.getLocalizedMessage());
         }
         if (pe instanceof EntityExistsException) {
-            returnMessage = messages.getMessage("login.register.failure");
+            returnMessage = Message.build(
+                    messages.getMessage("login.register.failure"));
         }
         return returnMessage;
     }
@@ -89,13 +114,14 @@ public final class LoginController {
      */
     @ExceptionHandler(DataAccessException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleDataAccessException(final DataAccessException de) {
-        String returnMessage;
+    @ResponseStatus(HttpStatus.OK)
+    public Message handleDataAccessException(final DataAccessException de) {
+        Message returnMessage;
         if (de instanceof DataIntegrityViolationException) {
-            returnMessage = messages.getMessage("login.register.failure");
+            returnMessage = Message.build(
+                    messages.getMessage("login.register.failure"));
         } else {
-            returnMessage = de.getLocalizedMessage();
+            returnMessage = Message.build(de.getLocalizedMessage());
         }
         return returnMessage;
     }
@@ -107,18 +133,17 @@ public final class LoginController {
      */
     @ExceptionHandler(TransactionException.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleTransactionException(final TransactionException te) {
-        String returnMessage;
-        if (te.getMostSpecificCause()
-                instanceof ConstraintViolationException) {
-            ConstraintViolationException cve =
-                    (ConstraintViolationException) te.getMostSpecificCause();
-            ConstraintViolation<?> cv =
-                    cve.getConstraintViolations().iterator().next();
-            returnMessage = cv.getMessage();
+    @ResponseStatus(HttpStatus.OK)
+    public Message handleTransactionException(final TransactionException te) {
+        Message returnMessage;
+        if (te.getMostSpecificCause() instanceof ValidationException) {
+            returnMessage = this.handleValidationException(
+                    (ValidationException) te.getMostSpecificCause());
+        } else if (te.getMostSpecificCause() instanceof PersistenceException) {
+            returnMessage = this.handlePersistenceException(
+                    (PersistenceException) te.getMostSpecificCause());
         } else {
-            returnMessage = te.getLocalizedMessage();
+            returnMessage = Message.build(te.getLocalizedMessage());
         }
         return returnMessage;
     }
@@ -139,8 +164,10 @@ public final class LoginController {
             WebAttributes.AUTHENTICATION_EXCEPTION);
         if (t == null) {
             return "";
+        } else {
+            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+            return t.getLocalizedMessage();
         }
-        return t.getLocalizedMessage();
     }
 
         /**
@@ -151,10 +178,10 @@ public final class LoginController {
         */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public String register(final String username, final String password) {
+    public Message register(final String username, final String password) {
         User newUser = new User(username, password);
         newUser.save();
-        return  messages.getMessage("login.register.success");
+        return Message.build("");
     }
 
     /**
@@ -165,12 +192,14 @@ public final class LoginController {
      */
     @RequestMapping(value = "/exists")
     @ResponseBody
-    public String exists(@RequestParam(value = "name") final String username) {
-        String message;
+    public Message exists(@RequestParam(value = "name") final String username) {
+        Message message;
         if (this.userRepository.findByUsername(username) == null) {
-            message = messages.getMessage("login.username.free");
+            message = Message.build(
+                    messages.getMessage("login.username.free"));
         } else {
-            message = messages.getMessage("login.username.exists");
+            message = Message.build(
+                    messages.getMessage("login.username.exists"));
         }
         return message;
     }
