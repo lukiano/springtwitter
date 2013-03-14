@@ -29,7 +29,7 @@
 		<infinispan.version>5.2.1.Final</infinispan.version>
 		<jaxb.version>2.2.4</jaxb.version>
 		<aspectj.version>1.7.1</aspectj.version>
-		<atmosphere.version>1.0.11</atmosphere.version>
+		<atmosphere.version>1.0.12</atmosphere.version>
 		<querydsl.version>2.9.0</querydsl.version>
 		<bonecp.version>0.7.1.RELEASE</bonecp.version>
 		<drools.version>5.5.0.Final</drools.version>
@@ -789,7 +789,7 @@
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>apt-maven-plugin</artifactId>
-				<version>1.0.6</version>
+				<version>1.0.8</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -832,7 +832,7 @@
 						-Dbitronix.tm.journal.disk.logPart1Filename=btm1-${jetty.port}.tlog
 						-Dcom.atomikos.icatch.log_base_name=atm-${jetty.port}.log
 						-Dcom.atomikos.icatch.tm_unique_name=atomikos${jetty.port}
-						-Dspring.profiles.active=${transaction.profile},${cluster.profile},${database.profile}
+						-Dspring.profiles.active=${cluster.profile},${database.profile}
 						-Dbitronix.tm.journal.disk.logPart2Filename=btm2-${jetty.port}.tlog
 						-Dbroker.port=${broker.port}
 						-Dlogback.configurationFile=./src/main/resources/logback.xml
