@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * will look for a Servlet init-param named org.atmosphere.servlet or
  * org.atmosphere.filter and will delegate request processing to them. When
  * used, this Servlet will ignore any value defined in META-INF/atmosphere.xml
- * as internally it will create a {@link ReflectorServletProcessor}
+ * as internally it will create a {@link org.atmosphere.handler.ReflectorServletProcessor}
  * @author Jean-Francois Arcand
  */
 public final class MeteorServlet extends AtmosphereServlet {
