@@ -2,35 +2,61 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Spring Twitter</title>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js">
-    </script>
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-signin {
+            max-width: 300px;
+            padding: 19px 29px 29px;
+            margin: 0 auto 20px;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+        .form-signin .form-signin-heading,
+        .form-signin .checkbox {
+            margin-bottom: 10px;
+        }
+        .form-signin input[type="text"],
+        .form-signin input[type="password"] {
+            font-size: 16px;
+            height: auto;
+            margin-bottom: 15px;
+            padding: 7px 9px;
+        }
+    </style>
 </head>
 <body>
-    <fieldset>
-        <legend>Hello new user!</legend>
-        <p>
-            <label for="j_username">What's your name?</label>
-            <br/>
-            <input type="text" name="j_username" id="j_username"/>
-            <span id="checkname"></span>
-        </p>
-
-        <p>
-            <label for="j_password">Password:</label>
-            <br/>
-            <input type="password" name="j_password" id="j_password"/>
-        </p>
-
-        <p>
-            <button id="register" type="button">Register me!</button>
-        </p>
-    </fieldset>
-	<p>
-		<a href="login">Go back to login page</a>
-	</p>
+    <form name="f" id="f" class="form-signin">
+        <fieldset>
+            <legend>Hello new user!</legend>
+            <div class="control-group" id="username">
+                <input type="text" class="input-block-level" name="j_username" id="j_username" placeholder="what's your nick?" />
+                <span id="checkname"></span>
+            </div>
+            <div class="control-group" id="password">
+                <input type="password" class="input-block-level" name="j_password" id="j_password" placeholder="what's your password?"/>
+            </div>
+            <div class="control-group" id="email">
+                <input type="email" class="input-block-level" name="j_email" id="j_email" placeholder="and your email?"/>
+                <span id="checkemail"></span>
+            </div>
+            <button id="register" class="btn btn-primary" type="button">Register me!</button>
+            <button id="goback" class="btn" type="button">Back to login please</button>
+        </fieldset>
+    </form>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="signup.js"></script>
-	<script type="text/javascript">
-		$(document).ready(ready);
-	</script>
 </body>
 </html>

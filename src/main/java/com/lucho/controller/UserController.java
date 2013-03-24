@@ -1,5 +1,6 @@
 package com.lucho.controller;
 
+import com.lucho.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,12 +9,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lucho.domain.User;
 
+import javax.inject.Inject;
+
 /**
  * Controller that provides login related endpoints.
  * @author Luciano.Leggieri
  */
 @Controller
 public final class UserController {
+
+    /**
+     * User service.
+     */
+    private final UserRepository userRepository;
+
+
+    /**
+     * Class constructor.
+     * @param anUserRepository user repository.
+     */
+    @Inject
+    public UserController(final UserRepository anUserRepository) {
+        this.userRepository = anUserRepository;
+    }
 
     /**
      * Makes the current user to follow the tweets of the desired user, if it
@@ -38,6 +56,18 @@ public final class UserController {
     @ResponseBody
     public Boolean shouldRefresh(@Principal final User user) {
         return user.shouldRefresh();
+    }
+
+    /**
+     * Checks if an user with the specified username exists.
+     *
+     * @param username a string with the user name.
+     * @return a string detailing if the user name is free to use.
+     */
+    @RequestMapping(value = "/freetouse")
+    @ResponseBody
+    public Boolean freeToUse(@RequestParam(value = "username") final String username) {
+        return this.userRepository.findByUsername(username) == null;
     }
 
 }

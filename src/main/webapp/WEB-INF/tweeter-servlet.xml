@@ -24,7 +24,7 @@
 
     <context:component-scan base-package="com.lucho.controller"/>
 
-    <import resource="ws-config.xml"/>
+    <!-- <import resource="ws-config.xml"/> -->
     
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
@@ -34,15 +34,18 @@
         <bean class="org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor" />
     </mvc:interceptors>
 
-    <bean id="conversionService" class="com.lucho.util.CustomConversionServiceFactoryBean" />
+    <bean id="conversionService" class="org.springframework.format.support.DefaultFormattingConversionService" />
+
+    <bean class="org.springframework.data.repository.support.DomainClassConverter">
+        <constructor-arg index="0" ref="conversionService" />
+    </bean>
 
     <!-- Resolves logical view names returned by Controllers to Tiles; a view name to resolve is treated as the name of a tiles definition -->
     <bean id="tilesViewResolver" class="com.lucho.util.TilesViewResolver">
         <property name="viewClass" value="com.lucho.util.TilesView"/>
         <property name="contentType" value="text/html;charset=UTF-8" />
     </bean>
-    
-    
+
     <!-- Map paths directly to view names without controller processing. Use the view-name attribute if necessary: by convention the view name equals the path without the leading slash -->
     <!--suppress SpringModelInspection -->
     <mvc:view-controller path="/" view-name="login" />
@@ -60,47 +63,48 @@
         </property>
         <!-- resolving preparer names as Spring bean definition names -->
         <property name="preparerFactoryClass"
-            value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory" />
+                  value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory" />
     </bean>
 
     <bean id="localeResolver"
           class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
     </bean>
-
-    <oauth:authorization-server  
-    	client-details-service-ref="clientDetailsService"
-    	token-services-ref="oauth2TokenServices" 
-    	user-approval-handler-ref="userApprovalHandler">
-    	<oauth:authorization-code 
-    		authorization-code-services-ref="authorizationCodeServices" />
-    	<oauth:refresh-token/>
-    	<oauth:password authentication-manager-ref="authenticationManager"/>
+    <!--
+    <oauth:authorization-server
+            client-details-service-ref="clientDetailsService"
+            token-services-ref="oauth2TokenServices"
+            user-approval-handler-ref="userApprovalHandler">
+        <oauth:authorization-code
+                authorization-code-services-ref="authorizationCodeServices" />
+        <oauth:refresh-token/>
+        <oauth:password authentication-manager-ref="authenticationManager"/>
     </oauth:authorization-server>
-    
+    -->
+
     <beans profile="websockets">
         <!--suppress SpringModelInspection -->
         <mvc:view-controller path="/t/home" view-name="atmosphere_home" />
 
-	    <mvc:annotation-driven conversion-service="conversionService" validator="validator">
-	        <mvc:argument-resolvers>
-	            <bean class="com.lucho.util.UserPrincipalWebArgumentResolver" />
-	            <bean class="com.lucho.atmosphere.AtmosphereResourceArgumentResolver" />
-	            <bean class="org.springframework.mobile.device.DeviceWebArgumentResolver" />
-	            <bean class="org.springframework.mobile.device.site.SitePreferenceWebArgumentResolver" />
-	        </mvc:argument-resolvers>
-	    </mvc:annotation-driven>
+        <mvc:annotation-driven conversion-service="conversionService" validator="validator">
+            <mvc:argument-resolvers>
+                <bean class="com.lucho.util.UserPrincipalWebArgumentResolver" />
+                <bean class="com.lucho.atmosphere.AtmosphereResourceArgumentResolver" />
+                <bean class="org.springframework.mobile.device.DeviceWebArgumentResolver" />
+                <bean class="org.springframework.mobile.device.site.SitePreferenceWebArgumentResolver" />
+            </mvc:argument-resolvers>
+        </mvc:annotation-driven>
     </beans>
-    
+
     <beans profile="regular">
         <mvc:view-controller path="/t/home" view-name="home" />
-    
-	    <mvc:annotation-driven conversion-service="conversionService" validator="validator">
-	        <mvc:argument-resolvers>
-	            <bean class="com.lucho.util.UserPrincipalWebArgumentResolver" />
-	            <bean class="org.springframework.mobile.device.DeviceWebArgumentResolver" />
-	            <bean class="org.springframework.mobile.device.site.SitePreferenceWebArgumentResolver" />
-	        </mvc:argument-resolvers>
-	    </mvc:annotation-driven>
+
+        <mvc:annotation-driven conversion-service="conversionService" validator="validator">
+            <mvc:argument-resolvers>
+                <bean class="com.lucho.util.UserPrincipalWebArgumentResolver" />
+                <bean class="org.springframework.mobile.device.DeviceWebArgumentResolver" />
+                <bean class="org.springframework.mobile.device.site.SitePreferenceWebArgumentResolver" />
+            </mvc:argument-resolvers>
+        </mvc:annotation-driven>
     </beans>
-    
+
 </beans>

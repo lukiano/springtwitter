@@ -10,20 +10,16 @@ import org.springframework.web.context.request.NativeWebRequest;
 /**
  * @author Luciano.Leggieri
  */
-public final class AtmosphereResourceArgumentResolver implements
-        WebArgumentResolver {
+public final class AtmosphereResourceArgumentResolver implements WebArgumentResolver {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object resolveArgument(final MethodParameter methodParameter,
-            final NativeWebRequest webRequest) throws Exception {
+    public Object resolveArgument(final MethodParameter methodParameter, final NativeWebRequest webRequest) {
 
-        if (AtmosphereResource.class.isAssignableFrom(methodParameter
-                .getParameterType())) {
-            return AtmosphereUtils.getAtmosphereResource(webRequest
-                    .getNativeRequest(HttpServletRequest.class));
+        if (AtmosphereResource.class.isAssignableFrom(methodParameter.getParameterType())) {
+            return AtmosphereUtils.getAtmosphereResource(webRequest.getNativeRequest(HttpServletRequest.class));
         } else {
             return WebArgumentResolver.UNRESOLVED;
         }

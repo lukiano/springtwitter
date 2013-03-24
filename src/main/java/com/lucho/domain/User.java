@@ -21,6 +21,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,7 +39,8 @@ import com.lucho.service.UserService;
 @Entity
 @Cacheable
 @Table(name = "t_user",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) }
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
+                @UniqueConstraint(columnNames = { "email" }) }
 )
 @Configurable(preConstruction = true)
 public class User implements UserDetails {
@@ -82,9 +84,24 @@ public class User implements UserDetails {
     private static final long serialVersionUID = 5788883283199993395L;
 
     /**
-     * Maximum length of the username string.
+     * Minimum length for the username.
      */
-    private static final int MAX_USER_LENGTH = 32;
+    public static final int MIN_USER_LENGTH = 4;
+
+    /**
+     * Maximum length for the username.
+     */
+    public static final int MAX_USER_LENGTH = 32;
+
+    /**
+     * Minimum length for the password.
+     */
+    public static final int MIN_PASS_LENGTH = 4;
+
+    /**
+     * Maximum length for the password.
+     */
+    public static final int MAX_PASS_LENGTH = 64;
 
     /**
      * User id. It's unique.
@@ -95,10 +112,19 @@ public class User implements UserDetails {
     private Integer id;
 
     /**
+     * Email. It's unique.
+     */
+    @NotEmpty
+    @Column(name = "email")
+    @Email
+    //@org.springframework.data.mongodb.core.index.Indexed
+    private String email;
+
+    /**
      * User name. It's unique.
      */
     @NotEmpty
-    @Size(max = MAX_USER_LENGTH)
+    @Size(min = MIN_USER_LENGTH, max = MAX_USER_LENGTH)
     @Column(name = "username")
     //@org.springframework.data.mongodb.core.index.Indexed
     private String username;
@@ -143,9 +169,11 @@ public class User implements UserDetails {
      *
      * @param name User name.
      * @param pass User password.
+     * @param mail User email.
      */
-    public User(final String name, final String pass) {
+    public User(final String name, final String pass, final String mail) {
         this.username = name;
+        this.email = mail;
         this.password = this.passwordEncoder.encode(pass);
         this.followedBy = new HashSet<User>();
         this.followedBy.add(this);

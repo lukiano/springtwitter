@@ -9,19 +9,14 @@ import javax.persistence.spi.PersistenceUnitTransactionType;
  * Injects the DataSource as a JTA DataSource in the JPA Persistence Unit.
  * @author Luciano.Leggieri
  */
-public final class JtaPersistenceUnitPostProcessor
-        implements PersistenceUnitPostProcessor {
+public final class JtaPersistenceUnitPostProcessor implements PersistenceUnitPostProcessor {
 
     /**
      * {@inheritDoc}
      */
-    public void postProcessPersistenceUnitInfo(
-            final MutablePersistenceUnitInfo mutablePersistenceUnitInfo) {
-        mutablePersistenceUnitInfo
-                .setJtaDataSource(mutablePersistenceUnitInfo
-                        .getNonJtaDataSource());
-        mutablePersistenceUnitInfo
-                .setTransactionType(PersistenceUnitTransactionType.JTA);
+    public void postProcessPersistenceUnitInfo(final MutablePersistenceUnitInfo mutablePersistenceUnitInfo) {
+        mutablePersistenceUnitInfo.setJtaDataSource(mutablePersistenceUnitInfo.getNonJtaDataSource());
+        mutablePersistenceUnitInfo.setTransactionType(PersistenceUnitTransactionType.JTA);
     }
 
 }

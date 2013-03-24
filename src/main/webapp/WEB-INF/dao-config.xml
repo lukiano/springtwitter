@@ -28,33 +28,19 @@
         <constructor-arg index="0" ref="dataSource" />
         <constructor-arg index="1" value="DataSource" />
     </bean>
-    
-    <beans profile="bitronix">
-        <bean id="xaDataSource" class="bitronix.tm.resource.jdbc.PoolingDataSource" init-method="init" destroy-method="close" depends-on="transactionManager">
-            <property name="className" value="#{datasourceConfiguration.getProperty('datasource.classname')}" />
-            <property name="uniqueName" value="XADBMS" />
-            <property name="maxPoolSize" value="50"/>
-            <property name="minPoolSize" value="5"/>
-            <property name="driverProperties" ref="jdbcConfiguration" />
-            <property name="ignoreRecoveryFailures" value="true" />
-            <property name="allowLocalTransactions" value="true" />
-        </bean>
-    </beans>    
 
-    <beans profile="atomikos">
-        <!-- configure an Atomikos JTA-aware datasource -->
-        <bean id="xaDataSource"
-              class="com.atomikos.jdbc.AtomikosDataSourceBean"
-              init-method="init" destroy-method="close" depends-on="transactionManager">
-            <property name="uniqueResourceName" value="XADBMS" />
-            <property name="maxPoolSize" value="50"/>
-            <property name="minPoolSize" value="5"/>
-            <property name="xaDataSourceClassName" value="#{datasourceConfiguration.getProperty('datasource.classname')}"/>
-            <property name="xaProperties" ref="jdbcConfiguration" />
-            <property name="poolSize" value="3"/>
-            <property name="testQuery" value="SELECT 1" />
-        </bean>
-    </beans>
+    <!-- configure an Atomikos JTA-aware datasource -->
+    <bean id="xaDataSource"
+          class="com.atomikos.jdbc.AtomikosDataSourceBean"
+          init-method="init" destroy-method="close" depends-on="transactionManager">
+        <property name="uniqueResourceName" value="XADBMS" />
+        <property name="maxPoolSize" value="50"/>
+        <property name="minPoolSize" value="5"/>
+        <property name="xaDataSourceClassName" value="#{datasourceConfiguration.getProperty('datasource.classname')}"/>
+        <property name="xaProperties" ref="jdbcConfiguration" />
+        <property name="poolSize" value="3"/>
+        <property name="testQuery" value="SELECT 1" />
+    </bean>
 
 	<beans profile="postgresql">
 		<util:properties id="jdbcConfiguration" location="classpath:postgresqljdbc.properties"/>

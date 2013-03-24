@@ -10,6 +10,7 @@
     <title>Spring Twitter</title>
     <spring:url value="/bootstrap/css/bootstrap.css" var="bootstrapCssUrl" />
     <spring:url value="/bootstrap/js/bootstrap.js" var="bootstrapJsUrl" />
+    <spring:url value="/signin.js" var="loginJsUrl" />
 	<link href="${bootstrapCssUrl}" rel="stylesheet">
 	<spring:url value="/userAjaxBootstrap.htm" var="formUrl" />
 	<spring:url value="/userAjaxBootstrap.json" var="formJsonUrl" />
@@ -47,40 +48,33 @@
     </style>
 </head>
 <body>
-<div>
     <c:if test="${not empty param.login_error}">
         <div class="error">
             Your login attempt was not successful, try again.<br/><br/>
             Reason: ${exceptionMessage}
         </div>
     </c:if>
-    <form name="f" action="spring_security_login" class="form-signin" method="post">
+    <form name="f" id="f" action="spring_security_login" class="form-signin" method="post">
         <fieldset>
-            <legend class="form-signin-heading">Login Information</legend>
+            <legend class="form-signin-heading">Welcome to SpringTwitter</legend>
             <div class="control-group" id="username">
-                <input type="text" class="input-block-level" placeholder="your nickname" name="j_username" id="j_username"
-                       <c:if test="${not empty param.login_error}">value="<%= request.getParameter("login_name") %>"
-                </c:if> />
+                <input type="text" class="input-block-level" placeholder="your nickname" name="j_username"
+                       id="j_username" required
+                       <c:if test="${not empty param.login_name}">value="${param.login_name}"</c:if> />
             </div>
             <div class="control-group" id="password">
-                <input type="password" class="input-block-level" placeholder="password" name="j_password" id="j_password"/>
+                <input type="password" class="input-block-level" placeholder="password"
+                       name="j_password" id="j_password" required />
             </div>
             <label class="checkbox" for="remember_me"><input type="checkbox" name="_spring_security_remember_me" id="remember_me"/>Don't ask for my password again</label>
-            <button id="submit" class="btn btn-large btn-primary" type="submit">Login</button>
-            <button id="signup" class="btn btn-large" type="button">No nick? Sign Up!</button>
+            <button id="submit" class="btn btn-primary" type="submit">Login</button>
+            <button id="signup" class="btn" type="button">No nick? Sign Up!</button>
+            <button id="forgot" class="btn" type="button">Forgot pass?</button>
         </fieldset>
     </form>
-</div>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="${bootstrapJsUrl}"></script>
-<script type="text/javascript">
-    function signup() {
-        window.location.href = "signup";
-    }
-    function ready() {
-        $("#signup").click(signup);
-    }
-    $(document).ready(ready);
-</script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="${bootstrapJsUrl}"></script>
+    <script type="text/javascript" src="${loginJsUrl}"></script>
 </body>
 </html>

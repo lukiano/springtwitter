@@ -1,22 +1,18 @@
 //CHECKSTYLE:OFF
 package org.atmosphere.cpr;
 
+import static org.atmosphere.cpr.ApplicationConfig.FILTER_CLASS;
+import static org.atmosphere.cpr.ApplicationConfig.FILTER_NAME;
 import static org.atmosphere.cpr.ApplicationConfig.MAPPING;
+import static org.atmosphere.cpr.ApplicationConfig.SERVLET_CLASS;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.Filter;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.atmosphere.cache.HeaderBroadcasterCache;
 import org.atmosphere.handler.ReflectorServletProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.lucho.atmosphere.FilterAndName;
 
 /**
  * Simple Servlet to use when Atmosphere {@link Meteor} are used. This Servlet
@@ -28,25 +24,20 @@ import com.lucho.atmosphere.FilterAndName;
  */
 public final class MeteorServlet extends AtmosphereServlet {
 
+    protected static final Logger logger = LoggerFactory.getLogger(MeteorServlet.class);
 
-    /**
-     * Default Serial Version UID.
-     */
-    private static final long serialVersionUID = 3294253087931323969L;
+    private Servlet servlet;
 
-    /**
-     * Logger.
-     */
-    protected static final Logger LOGGER = LoggerFactory
-            .getLogger(MeteorServlet.class);
-
-    /**
-     * Servlet to add Meteor.
-     */
-    private final Servlet servlet;
+    private String filterClassName;
     
-    private final List<FilterAndName> filters = new ArrayList<FilterAndName>();
-    
+    public MeteorServlet() {
+        this(false);
+    }
+
+    public MeteorServlet(boolean isFilter) {
+        super(isFilter, false);
+    }
+
     /**
      * Class constructor.
      * @param aServlet servlet to add meteor.
@@ -56,45 +47,20 @@ public final class MeteorServlet extends AtmosphereServlet {
         this.servlet = aServlet;
     }
 
-    public void addFilter(final Filter f, final String filterName) {
-        this.filters.add(new FilterAndName(f, filterName));
+    public void setFilterClassName(final String fcn) {
+        this.filterClassName = fcn;
     }
-    
 
     @Override
     public void init(final ServletConfig sc) throws ServletException {
         super.init(sc);
 
-        String servletClass = servlet.getClass().getName();
-        String mapping = framework().getAtmosphereConfig().getInitParameter(
-                MAPPING);
-//        String filterClass = framework().getAtmosphereConfig()
-//                .getInitParameter(FILTER_CLASS);
-//        String filterName = framework().getAtmosphereConfig().getInitParameter(
-//                FILTER_NAME);
-        if (mapping == null) {
-            mapping = "/[a-zA-Z0-9-&_.=;\\?]+";
-            BroadcasterFactory.getDefault().remove("/*");
-        }
-        LOGGER.info("Installed Servlet/Meteor {} mapped to {}", servletClass,
-                mapping);
-
-//        if (filterClass != null) {
-//            LOGGER.info("Installed Filter/Meteor {} mapped to /*", filterClass,
-//                    mapping);
-//        }
-
-        ReflectorServletProcessor r =
-                new ReflectorServletProcessor(this.servlet);
-        r.setServletClassName(servletClass);
-//        r.setFilterClassName(filterClass);
-//        r.setFilterName(filterName);
-        for (FilterAndName filter : filters) {
-            r.addFilter(filter);
-        }
-
+        ReflectorServletProcessor r = this.servlet==null?new ReflectorServletProcessor():new ReflectorServletProcessor(this.servlet);
+        r.setFilterClassName(filterClassName);
+        r.setFilterName(filterClassName);
+        String mapping = "/*";
+        BroadcasterFactory.getDefault().remove("/*");
         framework.addAtmosphereHandler(mapping, r).initAtmosphereHandler(sc);
-        framework.setBroadcasterCacheClassName(HeaderBroadcasterCache.class.getName());
     }
 
     @Override

@@ -18,7 +18,7 @@ public final class SimpleContextLoaderListener extends ContextLoaderListener {
 	@Override
 	public WebApplicationContext initWebApplicationContext(final ServletContext servletContext) {
 		WebApplicationContext wac = super.initWebApplicationContext(servletContext);
-		servletContext.removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+		//servletContext.removeAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 		return wac;
 	}
 

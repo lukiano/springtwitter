@@ -78,62 +78,38 @@ public final class SpringTwitterWebApplicationInitializer implements
         servletWac.setNamespace("tweeter-servlet");
 
         if (rootWac.getEnvironment().acceptsProfiles("websockets")) {
-            Filter rcf = new DelegatingFilterProxy(
-                    "requestContextFilter", securityWac);
-            Filter ssfc = new DelegatingFilterProxy(
-                    "springSecurityFilterChain", securityWac);
             Servlet dispatcherServlet = new DispatcherServlet(servletWac);
             MeteorServlet meteorServlet = new MeteorServlet(dispatcherServlet);
-            meteorServlet
-                    .addFilter(rcf, "springSecurityFilterChain");
-            meteorServlet
-                    .addFilter(ssfc, "springSecurityFilterChain");
-            ServletRegistration.Dynamic dispatcher = servletContext.addServlet(
-                    "tweeter", meteorServlet);
+            meteorServlet.setFilterClassName("com.lucho.util.SSFilter");
+
+            ServletRegistration.Dynamic dispatcher = servletContext.addServlet("tweeter", meteorServlet);
             dispatcher.setInitParameter("org.atmosphere.cpr.broadcasterClass",
                     "org.atmosphere.cpr.DefaultBroadcaster");
-            dispatcher.setInitParameter(
-                    "org.atmosphere.cpr.CometSupport.maxInactiveActivity",
+            dispatcher.setInitParameter("org.atmosphere.cpr.CometSupport.maxInactiveActivity",
                     Long.toString(WEBSOCKET_INACTIVITY_TIMEOUT_IN_MILLIS));
-            dispatcher.setInitParameter("org.atmosphere.useStream",
-                    TRUE.toString());
-            dispatcher.setInitParameter("org.atmosphere.useWebSocket",
-                    TRUE.toString());
-            dispatcher.setInitParameter("org.atmosphere.useNative",
-                    TRUE.toString());
-            dispatcher.setInitParameter(
-                    "org.atmosphere.cpr.broadcaster.shareableThreadPool",
-                    FALSE.toString());
-            dispatcher.setInitParameter(
-                    "org.atmosphere.cpr.broadcasterLifeCyclePolicy", "IDLE");
-            dispatcher.setInitParameter(
-                    "org.atmosphere.cpr.AtmosphereInterceptor",
-                    "org.atmosphere.interceptor.JSONPAtmosphereInterceptor,"
-                    + "org.atmosphere.interceptor.SSEAtmosphereInterceptor");
+            dispatcher.setInitParameter("org.atmosphere.useStream", FALSE.toString());
+            dispatcher.setInitParameter("org.atmosphere.useWebSocket", TRUE.toString());
+            dispatcher.setInitParameter("org.atmosphere.useNative", TRUE.toString());
+            dispatcher.setInitParameter("org.atmosphere.cpr.broadcaster.shareableThreadPool", FALSE.toString());
+            dispatcher.setInitParameter("org.atmosphere.cpr.broadcasterLifeCyclePolicy", "IDLE");
 
             dispatcher.setLoadOnStartup(1);
             dispatcher.addMapping("/");
         } else {
             FilterRegistration rcf = servletContext.addFilter(
-                    "requestContextFilter", new DelegatingFilterProxy(
-                            "requestContextFilter", securityWac));
-            rcf.addMappingForUrlPatterns(
-                    EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD),
-                    false, "/*");
+                    "requestContextFilter", new DelegatingFilterProxy("requestContextFilter", securityWac));
+            rcf.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD), false, "/*");
 
             FilterRegistration ssfc = servletContext.addFilter(
-                    "springSecurityFilterChain", new DelegatingFilterProxy(
-                            "springSecurityFilterChain", securityWac));
-            ssfc.addMappingForUrlPatterns(
-                    EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD),
-                    false, "/*");
+                    "springSecurityFilterChain", new DelegatingFilterProxy("springSecurityFilterChain", securityWac));
+            ssfc.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD), false, "/*");
 
             ServletRegistration.Dynamic dispatcher = servletContext.addServlet(
                     "tweeter", new DispatcherServlet(servletWac));
             dispatcher.setLoadOnStartup(1);
             dispatcher.addMapping("/");
         }
-        
+
     }
 
 }

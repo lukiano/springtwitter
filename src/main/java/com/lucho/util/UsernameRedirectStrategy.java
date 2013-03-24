@@ -1,5 +1,6 @@
 package com.lucho.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.
 UsernamePasswordAuthenticationFilter;
@@ -28,7 +29,7 @@ public final class UsernameRedirectStrategy extends DefaultRedirectStrategy {
         String username = request.getParameter(
                 UsernamePasswordAuthenticationFilter
                         .SPRING_SECURITY_FORM_USERNAME_KEY);
-        if (username == null) {
+        if (StringUtils.isEmpty(username)) {
             super.sendRedirect(request, response, url);
         } else {
             String newUrl;

@@ -31,8 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Luciano.Leggieri
  */
-public final class MeteorArgumentResolver implements
-        HandlerMethodArgumentResolver {
+public final class MeteorArgumentResolver implements HandlerMethodArgumentResolver {
 
     /**
      * {@inheritDoc}
@@ -49,8 +48,7 @@ public final class MeteorArgumentResolver implements
     public Object resolveArgument(final MethodParameter parameter,
             final ModelAndViewContainer mavContainer,
             final NativeWebRequest webRequest,
-            final WebDataBinderFactory binderFactory) throws Exception {
-        return AtmosphereUtils.getMeteor(webRequest
-                .getNativeRequest(HttpServletRequest.class));
+            final WebDataBinderFactory binderFactory) {
+        return AtmosphereUtils.getMeteor(webRequest.getNativeRequest(HttpServletRequest.class));
     }
 }
