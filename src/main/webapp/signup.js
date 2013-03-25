@@ -23,9 +23,9 @@ function registerCallback(data) {
 
 function register() {
 	"use strict";
-    var usern = $("#j_username").val();
-    var passw = $("#j_password").val();
-    var email = $("#j_email").val();
+    var usern = $("#username").val();
+    var passw = $("#password").val();
+    var email = $("#email").val();
     var jqxhr = jQuery.post("register", { username:usern, password:passw, email:email }, registerCallback, 'json');
     jqxhr.error(function() { registerCallback; })
 }
@@ -49,16 +49,16 @@ function ready() {
     //jQuery("#j_username").blur(checkUser);
     var rules = {
         rules: {
-            j_username: {
+            username: {
                 minlength: 2,
                 remote: "freetouse",
                 required: true
             },
-            j_email: {
+            email: {
                 email: true,
                 required: true
             },
-            j_password: {
+            password: {
                 minlength: 6,
                 required: true
             }
@@ -73,6 +73,6 @@ function ready() {
         }
     };
     var validator = $("#f").validate(rules);
-
 }
+
 $(document).ready(ready);

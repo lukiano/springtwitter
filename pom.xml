@@ -27,7 +27,7 @@
 		<infinispan.version>5.2.5.Final</infinispan.version>
 		<jaxb.version>2.2.4</jaxb.version>
 		<aspectj.version>1.7.1</aspectj.version>
-		<atmosphere.version>1.0.9</atmosphere.version>
+		<atmosphere.version>1.0.12</atmosphere.version>
 		<querydsl.version>2.9.0</querydsl.version>
 		<bonecp.version>0.7.1.RELEASE</bonecp.version>
 		<drools.version>5.5.0.Final</drools.version>

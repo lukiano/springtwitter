@@ -11,7 +11,7 @@
         </descriptors>
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
-          <root url="file://$MODULE_DIR$/overlays/org.atmosphere.atmosphere-jquery-1.0.9" relative="/" />
+          <root url="file://$MODULE_DIR$/overlays/org.atmosphere.atmosphere-jquery-1.0.12" relative="/" />
         </webroots>
       </configuration>
     </facet>
@@ -99,8 +99,8 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-acl:3.1.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-aspects:3.1.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: javax.annotation:jsr250-api:1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-jpa:1.2.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons-core:1.4.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-jpa:1.3.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:1.5.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-jms:2.2.2.RELEASE" level="project" />
@@ -133,34 +133,36 @@
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.0.0.GA" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-validator-annotation-processor:4.3.1.Final" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.jtype:jtype:0.1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search:4.1.1.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-orm:4.1.1.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-engine:4.1.1.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-analyzers:4.1.1.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.solr:solr-analysis-extras:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.solr:solr-core:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: commons-io:commons-io:1.4" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-highlighter:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-memory:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-misc:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spellchecker:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-grouping:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.solr:solr-commons-csv:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.5" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search:4.2.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-orm:4.2.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-engine:4.2.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-analyzers:4.2.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.solr:solr-analysis-extras:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.solr:solr-core:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-highlighter:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-memory:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-kuromoji:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-misc:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-phonetic:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spellchecker:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-grouping:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:r08" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-smartcn:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-stempel:3.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.avro:avro:1.5.1" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.7.3" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-smartcn:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-stempel:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.avro:avro:1.6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.8.8" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.8.8" level="project" />
     <orderEntry type="library" name="Maven: com.thoughtworks.paranamer:paranamer:2.3" level="project" />
-    <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.0.1-rc3" level="project" />
-    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-infinispan:4.1.1.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.xerial.snappy:snappy-java:1.0.4.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-facet:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-search-infinispan:4.2.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.infinispan:infinispan-lucene-directory:5.2.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.infinispan:infinispan-cachestore-jdbc:5.2.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.infinispan:infinispan-spring:5.2.5.Final" level="project" />
@@ -217,14 +219,14 @@
     <orderEntry type="library" name="Maven: org.joda:joda-convert:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.joda:joda-money:0.6" level="project" />
     <orderEntry type="library" name="Maven: c3p0:c3p0:0.9.1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-runtime:1.0.9" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-compat-jbossweb:1.0.9" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-compat-tomcat:1.0.9" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-compat-tomcat7:1.0.9" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-jms:1.0.9" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-jgroups:1.0.9" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-jquery:war:1.0.9" level="project" />
-    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-spring:1.0.9" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-runtime:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-compat-jbossweb:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-compat-tomcat:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-compat-tomcat7:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-jms:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-jgroups:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-jquery:war:1.0.12" level="project" />
+    <orderEntry type="library" name="Maven: org.atmosphere:atmosphere-spring:1.0.12" level="project" />
     <orderEntry type="library" name="Maven: eu.infomas:annotation-detector:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.mysema.querydsl:querydsl-jpa:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.mysema.querydsl:querydsl-core:2.9.0" level="project" />

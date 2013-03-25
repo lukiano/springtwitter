@@ -58,7 +58,7 @@ public final class MeteorServlet extends AtmosphereServlet {
         ReflectorServletProcessor r = this.servlet==null?new ReflectorServletProcessor():new ReflectorServletProcessor(this.servlet);
         r.setFilterClassName(filterClassName);
         r.setFilterName(filterClassName);
-        String mapping = "/*";
+        String mapping = "/[a-zA-Z0-9-_&.*=@~;\\?]+"; // "/*";
         BroadcasterFactory.getDefault().remove("/*");
         framework.addAtmosphereHandler(mapping, r).initAtmosphereHandler(sc);
     }
