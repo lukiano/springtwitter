@@ -1,9 +1,10 @@
 package com.lucho.controller;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
+import com.lucho.domain.Tweet;
+import com.lucho.domain.User;
+import com.lucho.repository.TweetRepository;
+import com.lucho.service.TweetService;
+import com.lucho.service.UserService;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -12,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.lucho.domain.Tweet;
-import com.lucho.domain.User;
-import com.lucho.repository.TweetRepository;
-import com.lucho.service.TweetService;
-import com.lucho.service.UserService;
+import javax.inject.Inject;
+import java.util.List;
 
 /**
  * MVC Controller for Tweet operations.
@@ -100,17 +98,6 @@ public final class TweetController {
             @RequestParam(value = "from", required = false) final Long millis) {
         return user.getTweetsIncludingFollows(millis);
 
-    }
-
-    /**
-     * Re indexes Tweets.
-     * @return true when re indexing completes.
-     */
-    @RequestMapping(value = "/reindex", method = RequestMethod.GET)
-    @ResponseBody
-    public Boolean reindex() {
-        this.tweetRepository.reindex();
-        return true;
     }
 
     /**

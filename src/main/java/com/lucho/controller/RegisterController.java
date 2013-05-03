@@ -7,17 +7,19 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.inject.Inject;
-import javax.persistence.EntityExistsException;
-import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -75,10 +77,10 @@ public final class RegisterController {
      * @param pe exception.
      * @return the exception message.
      */
-    @ExceptionHandler(PersistenceException.class)
+    @ExceptionHandler(DataAccessException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Message handlePersistenceException(final PersistenceException pe) {
+    public Message handlePersistenceException(final DataAccessException pe) {
         Message returnMessage;
         if (pe.getCause() instanceof ConstraintViolationException) {
             ConstraintViolationException cve = (ConstraintViolationException) pe.getCause();
@@ -87,7 +89,7 @@ public final class RegisterController {
         } else {
             returnMessage = Message.error(pe.getLocalizedMessage());
         }
-        if (pe instanceof EntityExistsException) {
+        if (pe instanceof DuplicateKeyException) {
             returnMessage = Message.error(messages.getMessage("login.register.failure"));
         }
         return returnMessage;
@@ -123,8 +125,8 @@ public final class RegisterController {
         Message returnMessage;
         if (te.getMostSpecificCause() instanceof ValidationException) {
             returnMessage = this.handleValidationException((ValidationException) te.getMostSpecificCause());
-        } else if (te.getMostSpecificCause() instanceof PersistenceException) {
-            returnMessage = this.handlePersistenceException((PersistenceException) te.getMostSpecificCause());
+        } else if (te.getMostSpecificCause() instanceof DataAccessException) {
+            returnMessage = this.handlePersistenceException((DataAccessException) te.getMostSpecificCause());
         } else {
             returnMessage = Message.error(te.getLocalizedMessage());
         }

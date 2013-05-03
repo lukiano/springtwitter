@@ -110,10 +110,7 @@
 	</bean>
 
 	<bean id="tokenRepository"
-		class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
-		<property name="dataSource" ref="dataSource" />
-		<property name="createTableOnStartup" value="false" />
-	</bean>
+		class="org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl" />
 
 	<bean id="rememberMeAuthenticationProvider"
 		class="org.springframework.security.authentication.RememberMeAuthenticationProvider">

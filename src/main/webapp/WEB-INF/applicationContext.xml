@@ -23,6 +23,5 @@
 	<import resource="properties-config.xml"/>
     <import resource="tx-config.xml"/>
     <import resource="jms-config.xml"/>
-    <import resource="dao-config.xml"/>
     <import resource="cache-config.xml"/>
 </beans>

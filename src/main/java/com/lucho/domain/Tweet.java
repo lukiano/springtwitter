@@ -1,74 +1,27 @@
 package com.lucho.domain;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lucho.repository.TweetRepository;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.Indexed;
+import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
+import org.springframework.data.neo4j.support.index.IndexType;
 
 import javax.inject.Inject;
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-
-import org.apache.solr.analysis.ASCIIFoldingFilterFactory;
-import org.apache.solr.analysis.LowerCaseFilterFactory;
-import org.apache.solr.analysis.StandardFilterFactory;
-import org.apache.solr.analysis.StandardTokenizerFactory;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.search.annotations.AnalyzerDef;
-import org.hibernate.search.annotations.CacheFromIndex;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
-import org.hibernate.search.annotations.TermVector;
-import org.hibernate.search.annotations.TokenFilterDef;
-import org.hibernate.search.annotations.TokenizerDef;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Configurable;
-
-import com.lucho.repository.TweetRepository;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Domain object that represents a tweet an user wrote.
  */
-@Entity
-@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-@Indexed
-@Cacheable
-@CacheFromIndex
-@Table(name = "t_tweet")
-/*
- * @AnalyzerDefs({
- * @AnalyzerDef(name = "en", tokenizer = @TokenizerDef(factory =
- * StandardTokenizerFactory.class), filters = {
- * @TokenFilterDef(factory = StandardFilterFactory.class),
- * @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
- * @TokenFilterDef(factory = LowerCaseFilterFactory.class),
- * @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
- * @Parameter(name = "language", value = "English") }) }),
- * @AnalyzerDef(name = "es", tokenizer = @TokenizerDef(factory =
- * StandardTokenizerFactory.class), filters = {
- * @TokenFilterDef(factory = StandardFilterFactory.class),
- * @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
- * @TokenFilterDef(factory = LowerCaseFilterFactory.class),
- * @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
- * @Parameter(name = "language", value = "Spanish") }) }) })
- */
-@AnalyzerDef(name = "en", tokenizer =
-@TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
-        @TokenFilterDef(factory = StandardFilterFactory.class),
-        @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
-        @TokenFilterDef(factory = LowerCaseFilterFactory.class) })
+@NodeEntity
 @Configurable
 public class Tweet implements Serializable {
 
@@ -81,9 +34,8 @@ public class Tweet implements Serializable {
      * TweetRepository implementation.
      */
     @Inject
-    @Transient
     @JsonIgnore
-    private TweetRepository tweetRepository;
+    private transient TweetRepository tweetRepository;
 
     /**
      * Maximum length for a tweet text.
@@ -93,37 +45,31 @@ public class Tweet implements Serializable {
     /**
      * Tweet id.
      */
-    @Id
-    @GeneratedValue
+    @GraphId
     @JsonIgnore
-    @DocumentId
     @org.springframework.data.annotation.Id
-    private Integer id;
+    private Long id;
 
     /**
      * Tweet text.
      */
     @NotEmpty
     @Size(max = MAX_TWEET_LENGTH)
-    @Field(index = Index.YES, store = Store.COMPRESS,
-        termVector = TermVector.WITH_POSITION_OFFSETS)
     @JsonProperty
-    //@org.springframework.data.mongodb.core.index.Indexed
+    @Indexed(fieldName = "tweet", indexName = "tweetIndex", indexType = IndexType.FULLTEXT)
     private String tweet;
 
     /**
      * Tweet language.
      */
-    @Field
-    // @AnalyzerDiscriminator(impl = LanguageDiscriminator.class)
     private String language;
 
     /**
      * Tweet owner.
      */
     @NotNull
-    @ManyToOne
     @JsonProperty
+    @RelatedTo(type = "BELONGS_TO")
     private User owner;
 
     /**
@@ -132,7 +78,6 @@ public class Tweet implements Serializable {
     @NotNull
     @Past
     @JsonProperty
-    //@org.springframework.data.mongodb.core.index.Indexed
     private Date creationDate;
 
     /**
@@ -162,23 +107,12 @@ public class Tweet implements Serializable {
         return owner;
     }
 
-    @Override
-    public final boolean equals(final Object another) {
-        return (another == this) || another instanceof Tweet
-                && this.id.equals(((Tweet) another).id);
-    }
-
-    @Override
-    public final int hashCode() {
-        return this.id;
-    }
-
     /**
      * Persists this tweet and refresh the owner's followers.
      */
     @JsonIgnore
     public final void save() {
-        this.tweetRepository.saveAndFlush(this);
+        this.tweetRepository.save(this);
     }
 
 }

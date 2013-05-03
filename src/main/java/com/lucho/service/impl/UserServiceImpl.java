@@ -42,12 +42,12 @@ public final class UserServiceImpl implements UserService {
      * Map that holds the ids of the Users whose tweet line needs
      * to be refreshed.
      */
-    private final ConcurrentMap<Integer, Serializable> usersToBeRefreshed;
+    private final ConcurrentMap<Long, Serializable> usersToBeRefreshed;
 
     /**
      * Map that holds pair user id for websockets.
      */
-    private final ListMultimap<Integer, WebsocketStructure> websockets;
+    private final ListMultimap<Long, WebsocketStructure> websockets;
 
     /**
      * User repository implementation.
@@ -93,13 +93,13 @@ public final class UserServiceImpl implements UserService {
                 return Lists.newArrayList();
             }
         };
-        Map<Integer, Collection<WebsocketStructure>> map = Maps.newHashMap();
+        Map<Long, Collection<WebsocketStructure>> map = Maps.newHashMap();
         this.websockets = Multimaps.synchronizedListMultimap(
                 Multimaps.newListMultimap(map, supplier));
     }
 
     @Override
-    public void refreshFollowersFor(final Integer ownerId) {
+    public void refreshFollowersFor(final Long ownerId) {
         User user = this.userRepository.findOne(ownerId);
         LOG.info("Refreshing followers for user " + user);
         for (User follower : user.getFollowedBy()) {
@@ -128,7 +128,7 @@ public final class UserServiceImpl implements UserService {
     @Override
     public void registerWebsocket(final User user,
             final AtmosphereResource resource) {
-        final Integer id = user.getId();
+        final Long id = user.getId();
         WebsocketStructure wss = new WebsocketStructure(
                 this.tweetRepository, user, resource);
         resource.addEventListener(new AtmosphereResourceEventListener() {

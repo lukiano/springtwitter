@@ -48,12 +48,12 @@ public final class SpringTwitterWebApplicationInitializer implements
         rootWac.refresh();
         
     	XmlWebApplicationContext repositoryWac = new XmlWebApplicationContext(rootWac);
-    	repositoryWac.setNamespace("jpa-config");
+    	repositoryWac.setNamespace("neo4j-config");
         repositoryWac.setServletContext(servletContext);
         repositoryWac.refresh();
 //    	ContextLoaderListener repositoryCll = new SimpleContextLoaderListener(rootWac, repositoryWac);
 //    	servletContext.addListener(repositoryCll);
-
+        /*
     	XmlWebApplicationContext securityWac = new XmlWebApplicationContext(repositoryWac);
     	securityWac.setNamespace("security-config");
         securityWac.setServletContext(servletContext);
@@ -109,7 +109,7 @@ public final class SpringTwitterWebApplicationInitializer implements
             dispatcher.setLoadOnStartup(1);
             dispatcher.addMapping("/");
         }
-
+        */
     }
 
 }

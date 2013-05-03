@@ -10,7 +10,7 @@
 
 	<!-- Infinispan cache manager -->
 	<bean id="infinispanCacheManager"
-		class="org.infinispan.spring.support.embedded.InfinispanEmbeddedCacheManagerFactoryBean" depends-on="dataSourceJNDI"
+		class="org.infinispan.spring.support.embedded.InfinispanEmbeddedCacheManagerFactoryBean"
 		p:configurationFileLocation="classpath:/infinispan.cfg.xml" />
 
 	<bean id="cacheManager"
@@ -18,9 +18,4 @@
 		<constructor-arg ref="infinispanCacheManager" />
 		</bean>
 		
-	<bean id="cacheManagerJNDI" class="com.lucho.util.JNDIExporter">
-        <constructor-arg index="0" ref="infinispanCacheManager" />
-        <constructor-arg index="1" value="CacheManager" />
-	</bean>
-
 </beans>

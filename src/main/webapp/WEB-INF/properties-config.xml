@@ -8,20 +8,4 @@
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
-	<beans profile="postgresql">
-		<util:properties id="datasourceConfiguration" location="classpath:postgresql.properties"/>
-	</beans>
-
-	<beans profile="mssqlserver">
-		<util:properties id="datasourceConfiguration" location="classpath:mssqlserver.properties"/>
-	</beans>    
-
-	<beans profile="mysql">
-		<util:properties id="datasourceConfiguration" location="classpath:mysql.properties"/>
-	</beans>    
-
-	<beans profile="h2">
-		<util:properties id="datasourceConfiguration" location="classpath:h2.properties"/>
-	</beans>    
-	    
 </beans>

@@ -29,9 +29,4 @@ public interface TweetRepositoryCustom {
      */
     List<Tweet> searchTweets(String textToSearch, User user);
 
-    /**
-     * Performs reindexing of the tweet text index repository.
-     */
-    void reindex();
-
 }

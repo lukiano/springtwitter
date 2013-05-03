@@ -1,47 +1,34 @@
 package com.lucho.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lucho.repository.TweetRepository;
+import com.lucho.repository.UserRepository;
+import com.lucho.service.UserService;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.neo4j.graphdb.Direction;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.Indexed;
+import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
+import org.springframework.data.neo4j.support.index.IndexType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.inject.Inject;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Size;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.lucho.repository.TweetRepository;
-import com.lucho.repository.UserRepository;
-import com.lucho.service.UserService;
-
 /**
  * Represents a user of the system.
  */
-@Cache(usage = CacheConcurrencyStrategy.TRANSACTIONAL)
-@Entity
-@Cacheable
-@Table(name = "t_user",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
-                @UniqueConstraint(columnNames = { "email" }) }
-)
+@NodeEntity
 @Configurable(preConstruction = true)
 public class User implements UserDetails {
 
@@ -49,7 +36,6 @@ public class User implements UserDetails {
      * TweetRepository implementation.
      */
     @Inject
-    @Transient
     @JsonIgnore
     private transient TweetRepository tweetRepository;
 
@@ -57,7 +43,6 @@ public class User implements UserDetails {
      * TweetRepository implementation.
      */
     @Inject
-    @Transient
     @JsonIgnore
     private transient UserRepository userRepository;
 
@@ -65,7 +50,6 @@ public class User implements UserDetails {
      * User service.
      */
     @Inject
-    @Transient
     @JsonIgnore
     private transient UserService userService;
 
@@ -73,7 +57,6 @@ public class User implements UserDetails {
      * Password encoder.
      */
     @Inject
-    @Transient
     @JsonIgnore
     private transient PasswordEncoder passwordEncoder;
 
@@ -106,18 +89,16 @@ public class User implements UserDetails {
     /**
      * User id. It's unique.
      */
-    @Id
+    @GraphId
     @org.springframework.data.annotation.Id
-    @GeneratedValue
-    private Integer id;
+    private Long id;
 
     /**
      * Email. It's unique.
      */
     @NotEmpty
-    @Column(name = "email")
     @Email
-    //@org.springframework.data.mongodb.core.index.Indexed
+    @Indexed(fieldName = "email", indexName = "emailIndex", indexType = IndexType.UNIQUE)
     private String email;
 
     /**
@@ -125,8 +106,7 @@ public class User implements UserDetails {
      */
     @NotEmpty
     @Size(min = MIN_USER_LENGTH, max = MAX_USER_LENGTH)
-    @Column(name = "username")
-    //@org.springframework.data.mongodb.core.index.Indexed
+    @Indexed(fieldName = "username", indexName = "userIndex")
     private String username;
 
     /**
@@ -139,24 +119,22 @@ public class User implements UserDetails {
     /**
      * Set of {@link User} that follow this one.
      */
-    @ManyToMany
     @JsonIgnore
+    @RelatedTo(type = "FOLLOWED_BY", direction = Direction.INCOMING)
     private Set<User> followedBy;
 
     /**
      * User permissions.
      */
-    @Transient
     @JsonIgnore
-    private List<GrantedAuthority> authorities;
+    private transient List<GrantedAuthority> authorities;
 
     /**
      * Temporal field, true if this user is not being
      * followed by the tweetline requester.
      */
-    @Transient
     @JsonProperty
-    private boolean canFollow;
+    private transient boolean canFollow;
 
     /**
      * Default Class Constructor.
@@ -182,7 +160,7 @@ public class User implements UserDetails {
     /**
      * @return the user id.
      */
-    public final Integer getId() {
+    public final Long getId() {
         return id;
     }
 
@@ -279,7 +257,7 @@ public class User implements UserDetails {
      */
     @JsonIgnore
     public final void save() {
-        this.userRepository.saveAndFlush(this);
+        this.userRepository.save(this);
     }
 
     /**

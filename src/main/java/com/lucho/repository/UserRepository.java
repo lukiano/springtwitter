@@ -1,16 +1,15 @@
 package com.lucho.repository;
 
 import com.lucho.domain.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.neo4j.repository.GraphRepository;
 
 /**
  * Repository that handles User objects.
  *
  * @author Luciano.Leggieri
  */
-public interface UserRepository extends JpaRepository<User, Integer>,
-        UserRepositoryCustom, QueryDslPredicateExecutor<User> {
+public interface UserRepository extends GraphRepository<User>,
+        UserRepositoryCustom {
 
     /**
      * Find a user by its username.

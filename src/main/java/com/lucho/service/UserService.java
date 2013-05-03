@@ -17,7 +17,7 @@ public interface UserService {
      * to refresh their tweet lines.
      * @param ownerId a User id.
      */
-    void refreshFollowersFor(Integer ownerId);
+    void refreshFollowersFor(Long ownerId);
 
     /**
      * Asks if this User should refresh his tweet line.

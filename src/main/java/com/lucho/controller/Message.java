@@ -1,8 +1,8 @@
 package com.lucho.controller;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import java.io.Serializable;
 
 /**
  * Container object that holds a message string.

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.atmosphere.cpr.AtmosphereResource;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.lucho.domain.Tweet;
 import com.lucho.domain.User;
